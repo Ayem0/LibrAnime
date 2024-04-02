@@ -1,0 +1,122 @@
+{% extends 'loginAndRegisterBase.html.twig' %}
+
+{% block title %}Log in!{% endblock %}
+
+{% block body %}
+
+    <div class="limiter">
+		<div class="container-login100" style="background-image: url('{{ asset('/build/images/bg-01.jpg') }}');">
+
+			<div class="wrap-login100 p-l-110 p-r-110 p-t-62 p-b-33">
+				<form class="login100-form validate-form flex-sb flex-w" method="post">
+					<span class="login100-form-title p-b-53">
+						Log in 
+					</span>
+					<span class="login100-form-title p-b-53">
+						{% if error %}
+                        <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                    	{% endif %}
+
+					</span>
+                    {% if app.user %}
+                        <div class="mb-3">
+                            You are logged in as {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Logout</a>
+                        </div>
+                    {% endif %}
+					<div class="p-t-31 p-b-9">
+						<span class="txt1">
+							Email
+						</span>
+					</div>
+					<div class="wrap-input100 validate-input" data-validate = "Email is required">
+                        <input type="email" value="{{ last_username }}" name="_username" id="username" class="form-control input100" autocomplete="email" required autofocus>
+						<span class="focus-input100"></span>
+					</div>
+					
+					<div class="p-t-13 p-b-9">
+						<span class="txt1">
+							Password
+						</span>
+					</div>
+					<div class="wrap-input100 validate-input" data-validate = "Password is required">
+                        <input type="password" name="_password" id="password" class="form-control input100" autocomplete="current-password" required>
+						<span class="focus-input100"></span>
+					</div>
+					<a href="#" class="txt2 bo1 m-l-5">
+						Forgot password?
+					</a>
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+					<div class="container-login100-form-btn m-t-17">
+                        <button class="btn btn-lg btn-primary login100-form-btn" type="submit">
+                            Sign in
+                        </button>
+					</div>
+
+					<div class="w-full text-center p-t-55">
+						<span class="txt2">
+							Not a member?
+						</span>
+
+						<a href="{{ path('app_register') }}" class="txt2 bo1">
+							Register now
+						</a>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	
+
+	<div id="dropDownSelect1"></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    {#
+    <form method="post">
+        {% if error %}
+            <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+        {% endif %}
+
+        {% if app.user %}
+            <div class="mb-3">
+                You are logged in as {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Logout</a>
+            </div>
+        {% endif %}
+
+        <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+        <label for="username">Email</label>
+        <input type="email" value="{{ last_username }}" name="_username" id="username" class="form-control" autocomplete="email" required autofocus>
+        <label for="password">Password</label>
+        <input type="password" name="_password" id="password" class="form-control" autocomplete="current-password" required>
+
+        <input type="hidden" name="_csrf_token"
+               value="{{ csrf_token('authenticate') }}"
+        >
+        /////////////////////////////// FAAAAAAAAAAAAAIIIIIISSSSSSSSS LEEEEEEEE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+            Uncomment this section and add a remember_me option below your firewall to activate remember me functionality.
+            See https://symfony.com/doc/current/security/remember_me.html
+
+            <div class="checkbox mb-3">
+                <label>
+                    <input type="checkbox" name="_remember_me"> Remember me
+                </label>
+            </div>
+
+        <button class="btn btn-lg btn-primary" type="submit">
+            Sign in
+        </button>
+    </form>
+    #}
+{% endblock %}

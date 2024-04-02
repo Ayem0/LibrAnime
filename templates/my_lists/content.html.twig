@@ -1,0 +1,50 @@
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-content">
+            <!-- ***** Most Popular Start ***** -->
+                <div class="most-popular">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="heading-section">
+                                <h4><em>My Lists</em></h4>
+                                <button id="create-list-button" class="btn btn-primary"><i class="fa fa-plus"></i> Create list</button>
+                                <div id="create-list-form" style="display: none;">
+                                    {{ form_start(form) }}
+                                    {{ form_row(form.nom) }}
+                                    <button type="submit">Créer</button>
+                                    {{ form_end(form) }}
+                                </div>
+                            </div>
+                        <div class="row">
+                  {% for liste in listes %}
+                  <div class="col-lg-3 col-sm-6">
+                    <div class="item">
+                      <a href= "{{ path('app_list', {'id': liste.id}) }}">
+                        <img src="{{ asset('build/assets/images/popular-01.jpg') }}" alt="">
+                      <a/>
+                      <h4><a href="{{ path('app_list', {'id': liste.id}) }}">{{ liste.nom }}</a><br><span>Sandbox</span></h4>
+                      <ul>
+                        <li><i class="fa fa-star"></i> 4.8</li>
+                        <li><i class="fa fa-download"></i> 2.3M</li>
+                      </ul>
+                      <form action="" method="post">
+                        <input type="hidden" name="_method" value="EDIT">
+                        <button type="submit">Edit</button>
+                      </form>
+                      <form action="{{ path('app_remove_list', {'id': liste.id}) }}" method="post">
+                        <input type="hidden" name="_method" value="DELETE">
+                        <button type="submit">Delete</button>
+                      </form>
+                    </div>
+                  </div>
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- ***** Most Popular End ***** -->
+        </div>
+      </div>
+    </div>
+  </div>

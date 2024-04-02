@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}My Lists{% endblock %}
+
+{% block body %}
+    {% include '/my_lists/content.html.twig' %}
+    {% include 'footer.html.twig' %}
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        $(document).ready(function() {
+            $("#create-list-button").click(function() {
+                $("#create-list-form").toggle();
+            });
+        });
+    </script>
+{% endblock %}
