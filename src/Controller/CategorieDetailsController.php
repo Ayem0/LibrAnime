@@ -7,7 +7,7 @@ use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-
+use App\Form\SearchFormType;
 class CategorieDetailsController extends AbstractController
 {
     #[Route('/categories/{id}', name: 'app_categorie_details')]
@@ -20,10 +20,11 @@ class CategorieDetailsController extends AbstractController
         foreach ($animeInCategory as $element) {
             $listAnime[] = $element;
         };
-
+        $form2 = $this->createForm(SearchFormType::class);
         return $this->render('categorie_details/index.html.twig', [
             'listeAnime' => $listAnime,
-            'categorie' => $category->getNom()
+            'categorie' => $category->getNom(),
+            'searchForm' => $form2,
             
         ]);
     }

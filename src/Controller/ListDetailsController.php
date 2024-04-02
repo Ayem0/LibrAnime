@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Anime;
 use App\Entity\Liste;
+use App\Form\SearchFormType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,10 +22,11 @@ class ListDetailsController extends AbstractController
         foreach ($animeInList as $element) {
             $listAnime[] = $element;
         };
-
+        $form2 = $this->createForm(SearchFormType::class);
         return $this->render('list_details/index.html.twig', [
             'liste' => $list,
-            'animeInList' => $listAnime
+            'animeInList' => $listAnime,
+            'searchForm'=> $form2,
         ]);
     }
 

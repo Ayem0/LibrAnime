@@ -12,7 +12,7 @@
                                 <div id="create-list-form" style="display: none;">
                                     {{ form_start(form) }}
                                     {{ form_row(form.nom) }}
-                                    <button type="submit">Créer</button>
+                                    <button type="submit">Create</button>
                                     {{ form_end(form) }}
                                 </div>
                             </div>
@@ -28,10 +28,6 @@
                         <li><i class="fa fa-star"></i> 4.8</li>
                         <li><i class="fa fa-download"></i> 2.3M</li>
                       </ul>
-                      <form action="" method="post">
-                        <input type="hidden" name="_method" value="EDIT">
-                        <button type="submit">Edit</button>
-                      </form>
                       <form action="{{ path('app_remove_list', {'id': liste.id}) }}" method="post">
                         <input type="hidden" name="_method" value="DELETE">
                         <button type="submit">Delete</button>

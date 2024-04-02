@@ -7,7 +7,7 @@ use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-
+use App\Form\SearchFormType;
 class AnimeDetailsController extends AbstractController
 {
     #[Route('/anime/details/{id}', name: 'app_anime_details')]
@@ -19,9 +19,11 @@ class AnimeDetailsController extends AbstractController
         foreach ($categories as $element) {
             $categoriesArray[] = $element;
         };
+        $form2 = $this->createForm(SearchFormType::class);
         return $this->render('anime_details/index.html.twig', [
             'anime' => $anime,
-            'categories'=> $categoriesArray
+            'categories'=> $categoriesArray,
+            'searchForm' => $form2,
         ]);
     }
 }

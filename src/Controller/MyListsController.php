@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Form\CreateListFormType;
+use App\Form\SearchFormType;
 use App\Entity\Liste;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -34,10 +35,11 @@ class MyListsController extends AbstractController
             };
             $listsArray = array_reverse($listsArray);
         }
-
+        $form2 = $this->createForm(SearchFormType::class);
         return $this->render('my_lists/index.html.twig', [
             'listes'=> $listsArray,
-            'form'=>$form
+            'form'=>$form,
+            'searchForm' => $form2,
         ]);
     }
     
