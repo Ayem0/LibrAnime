@@ -6,11 +6,11 @@
         <title>{% block title %}Welcome!{% endblock %}</title>
         <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
         <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
-        <link href= {{ asset('build/vendor2/bootstrap/css/bootstrap.min.css') }} rel="stylesheet">
-        <link rel="stylesheet" href={{ asset("build/assets/css/fontawesome.css") }} >
-        <link rel="stylesheet" href={{ asset("build/assets/css/templatemo-cyborg-gaming.css") }} >
-        <link rel="stylesheet" href={{ asset("build/assets/css/owl.css") }} >
-        <link rel="stylesheet" href={{ asset("build/assets/css/animate.css") }} >
+        <link href= {{ asset('vendor2/bootstrap/css/bootstrap.min.css') }} rel="stylesheet">
+        <link rel="stylesheet" href={{ asset("assets/css/fontawesome.css") }} >
+        <link rel="stylesheet" href={{ asset("assets/css/templatemo-cyborg-gaming.css") }} >
+        <link rel="stylesheet" href={{ asset("assets/css/owl.css") }} >
+        <link rel="stylesheet" href={{ asset("assets/css/animate.css") }} >
         <link rel="stylesheet"href="https://unpkg.com/swiper@7/swiper-bundle.min.css"/>
 
         {% block stylesheets %}{% endblock %}
@@ -21,14 +21,14 @@
     <body>
         {% include 'header.html.twig' %}
         {% block body %}{% endblock %}
-        <script src={{ asset("build/vendor2/jquery/jquery.min.js" ) }}></script>
-        <script src={{ asset("build/vendor2/bootstrap/js/bootstrap.min.js" ) }}></script>
-        <script src={{ asset("build/assets/js/isotope.min.js" ) }}></script>
-        <script src={{ asset("build/assets/js/owl-carousel.js" ) }}></script>
-        <script src={{ asset("build/assets/js/tabs.js" ) }}></script>
-        <script src={{ asset("build/assets/js/popup.js" ) }}></script>
-        <script src={{ asset("build/assets/js/custom.js" ) }}></script>
-        <script src={{ asset("build/app.53d71f57.js" ) }}></script>
+        <script src={{ asset("vendor2/jquery/jquery.min.js" ) }}></script>
+        <script src={{ asset("vendor2/bootstrap/js/bootstrap.min.js" ) }}></script>
+        <script src={{ asset("assets/js/isotope.min.js" ) }}></script>
+        <script src={{ asset("assets/js/owl-carousel.js" ) }}></script>
+        <script src={{ asset("assets/js/tabs.js" ) }}></script>
+        <script src={{ asset("assets/js/popup.js" ) }}></script>
+        <script src={{ asset("assets/js/custom.js" ) }}></script>
+        <script src={{ asset("app.53d71f57.js" ) }}></script>
         
         {% block javascripts %}{% endblock %}
             {{ encore_entry_script_tags('app') }}
