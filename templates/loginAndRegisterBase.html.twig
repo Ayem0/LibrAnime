@@ -5,32 +5,13 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <title>{% block title %}Welcome!{% endblock %}</title>
         <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">	
-	    <link rel="icon" type="image/png" href={{ asset("build/images/icons/favicon.ico" ) }}/>
-        <link rel="stylesheet" type="text/css" href={{ asset("build/vendor/bootstrap/css/bootstrap.min.css") }}>
-        <link rel="stylesheet" type="text/css" href={{ asset("build/fonts/font-awesome-4.7.0/css/font-awesome.min.css" ) }}>
-        <link rel="stylesheet" type="text/css" href={{ asset("build/fonts/Linearicons-Free-v1.0.0/icon-font.min.css" ) }}>
-        <link rel="stylesheet" type="text/css" href={{ asset("build/vendor/animate/animate.css" ) }}>	
-        <link rel="stylesheet" type="text/css" href={{ asset("build/vendor/css-hamburgers/hamburgers.min.css" ) }}>
-        <link rel="stylesheet" type="text/css" href={{ asset("build/vendor/animsition/css/animsition.min.css" ) }}>
-        <link rel="stylesheet" type="text/css" href={{ asset("build/vendor/select2/select2.min.css" ) }}>	
-        <link rel="stylesheet" type="text/css" href={{ asset("build/vendor/daterangepicker/daterangepicker.css" ) }}>
-        <link rel="stylesheet" type="text/css" href={{ asset("build/css/util.css" ) }}>
-        <link rel="stylesheet" type="text/css" href={{ asset("build/css/main.css" ) }}>
-
         {% block stylesheets %}{% endblock %}
+        {{ encore_entry_link_tags('loginAndRegister') }}
         
-        <script src={{ asset("build/vendor/jquery/jquery-3.2.1.min.js") }}></script>
-        <script src={{ asset("build/vendor/animsition/js/animsition.min.js") }}></script>
-        <script src={{ asset("build/vendor/bootstrap/js/popper.js") }}></script>
-        <script src={{ asset("build/vendor/bootstrap/js/bootstrap.min.js") }}></script>
-        <script src={{ asset("build/vendor/select2/select2.min.js") }}></script>
-        <script src={{ asset("build/vendor/daterangepicker/moment.min.js") }}></script>
-        <script src={{ asset("build/vendor/daterangepicker/daterangepicker.js") }}></script>
-        <script src={{ asset("build/vendor/countdowntime/countdowntime.js") }}></script>
-        <script src={{ asset("build/js/main.js") }}></script>
-        {% block javascripts %}{% endblock %}
+        
     </head>
     <body>
         {% block body %}{% endblock %}
+        {% block javascripts %}{% endblock %}
     </body>
 </html>

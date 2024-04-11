@@ -19,7 +19,7 @@
                 <nav class="main-nav">
                     <!-- ***** Logo Start ***** -->
                     <a href="{{ path('app_home') }}" class="logo">
-                        <img src="{{ asset("assets/images/logo.png") }}" alt="">
+                        <img src="{{ asset("images/logo.png") }}" alt="">
                     </a>
                     <!-- ***** Logo End ***** -->
                     <!-- ***** Search End ***** -->
@@ -34,7 +34,7 @@
                       <li><a href="{{ path('app_home') }}" {% if app.request.attributes.get('_route') == 'app_home' %}class="active"{% endif %}>Home</a></li>
                       <li><a href="{{ path('app_categories') }}" {% if app.request.attributes.get('_route') == 'app_categories' %}class="active"{% endif %}>Categories</a></li>
                       <li><a href="{{ path('app_my_lists') }}" {% if app.request.attributes.get('_route') == 'app_my_lists' %}class="active"{% endif %}>My lists</a></li>
-                      <li><a href="{{ path('app_home') }}" {% if app.request.attributes.get('_route') == 'app_home' %}class="active"{% endif %}>My Account <img src={{ asset('build/assets/images/profile-header.jpg')}} alt=""></a></li>
+                      <li><a href="{{ path('app_my_account') }}" {% if app.request.attributes.get('_route') == 'app_my_account' %}class="active"{% endif %}>My Account <img src={{ asset('images/profile-header.jpg')}} alt=""></a></li>
                     </ul>
                     {% else %}
                     <ul class="nav">

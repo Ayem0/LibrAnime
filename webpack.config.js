@@ -21,47 +21,48 @@ Encore
      * and one CSS file (e.g. app.css) if your JavaScript imports CSS.
      */
     .addEntry('app', './assets/app.js')
+    .addEntry('loginAndRegister', './assets/loginAndRegister.js')
     // templateSite
     // js
-    .addEntry('customjs', './assets/templateSite/assets/js/custom.js')
-    .addEntry('isotope', './assets/templateSite/assets/js/isotope.min.js')
-    .addEntry('owl-carousel', './assets/templateSite/assets/js/owl-carousel.js')
-    .addEntry('popup', './assets/templateSite/assets/js/popup.js')
-    .addEntry('tabs', './assets/templateSite/assets/js/tabs.js')
-    .addEntry('bootstrapjs', './assets/templateSite/assets/bootstrap/js/bootstrap.min.js')
-    .addEntry('jquery', './assets/templateSite/assets/jquery/jquery.min.js')
-    .addEntry('jqueryslim', './assets/templateSite/assets/jquery/jquery.slim.min.js')
+    // .addEntry('customjs', './assets/templateSite/assets/js/custom.js')
+    // .addEntry('isotope', './assets/templateSite/assets/js/isotope.min.js')
+    // .addEntry('owl-carousel', './assets/templateSite/assets/js/owl-carousel.js')
+    // .addEntry('popup', './assets/templateSite/assets/js/popup.js')
+    // .addEntry('tabs', './assets/templateSite/assets/js/tabs.js')
+    // .addEntry('bootstrapjs', './assets/templateSite/assets/bootstrap/js/bootstrap.min.js')
+    // .addEntry('jquery', './assets/templateSite/assets/jquery/jquery.min.js')
+    // .addEntry('jqueryslim', './assets/templateSite/assets/jquery/jquery.slim.min.js')
     // css
-    .addStyleEntry('animate', '/assets/templateSite/assets/css/animate.css')
-    .addStyleEntry('flex-slider', '/assets/templateSite/assets/css/flex-slider.css')
-    .addStyleEntry('fontawesome', '/assets/templateSite/assets/css/fontawesome.css')
-    .addStyleEntry('owl', '/assets/templateSite/assets/css/owl.css')
-    .addStyleEntry('templatemo-cyborg-gaming', '/assets/templateSite/assets/css/templatemo-cyborg-gaming.css')
-    .addStyleEntry('bootstrapcss', '/assets/templateSite/assets/css/bootstrap.min.css')
+    // .addStyleEntry('animate', '/assets/templateSite/assets/css/animate.css')
+    // .addStyleEntry('flex-slider', '/assets/templateSite/assets/css/flex-slider.css')
+    // .addStyleEntry('fontawesome', '/assets/templateSite/assets/css/fontawesome.css')
+    // .addStyleEntry('owl', '/assets/templateSite/assets/css/owl.css')
+    // .addStyleEntry('templatemo-cyborg-gaming', '/assets/templateSite/assets/css/templatemo-cyborg-gaming.css')
+    // .addStyleEntry('bootstrapcss', '/assets/templateSite/assets/css/bootstrap.min.css')
 
     // template Login
-    // js
-    .addEntry('mainjs', './assets/templateLogin/js/main.js')
-    .addEntry('animsition', './assets/templateLogin/vendor/animsition/js/animsition.min.js')
-    .addEntry('bootstrapjsLogin', './assets/templateLogin/vendor/bootstrap/js/bootstrap.min.js') // modifier les chemins ici
-    .addEntry('popper', './assets/templateLogin/vendor/bootstrap/js/popper.min.js')
-    .addEntry('tooltip', './assets/templateLogin/vendor/bootstrap/js/tooltip.js')
-    .addEntry('countdowntime', './assets/templateLogin/vendor/countdowntime/countdowntime.js')
-    .addEntry('daterangepicker', './assets/templateLogin/vendor/daterangepicker/daterangepicker.js')
-    .addEntry('moment', './assets/templateLogin/vendor/daterangepicker/moment.min.js')
-    .addEntry('jquery321', './assets/templateLogin/vendor/jquery/jquery-3.2.1.min.js')
-    .addEntry('jquerySlimLogin', './assets/templateLogin/vendor/jquery/jquery.slim.min.js')
-    .addEntry('jqueryLogin', './assets/templateLogin/vendor/jquery/jquery.min.js')
-    .addEntry('perfet-scrollbar', './assets/templateLogin/vendor/perfect-scrollbar/perfect-scrollbar.min.js')
-    .addEntry('select2', './assets/templateLogin/vendor/select2/select2.min.js')
-    // css
-    .addStyleEntry('maincss', './assets/templateLogin/css/main.css')
-    .addStyleEntry('utilcss', './assets/templateLogin/css/util.css')
-    .addStyleEntry('animateLogin', './assets/templateLogin/vendor/animate/animate.css')
-    .addStyleEntry('animsitioncss', './assets/templateLogin/vendor/animsition/animsition.min.css')
-    .addStyleEntry('boostrap-grid', './assets/templateLogin/vendor/bootstrap/bootstrap-grid.min.css')
-    .addStyleEntry('boostrap-reboot', './assets/templateLogin/vendor/bootstrap/bootstrap-reboot.min.css')
-    .addStyleEntry('boostrapcssLogin', './assets/templateLogin/vendor/bootstrap/bootstrap-reboot.min.css')
+    // // js
+    // .addEntry('mainjs', './assets/templateLogin/js/main.js')
+    // .addEntry('animsition', './assets/templateLogin/vendor/animsition/js/animsition.min.js')
+    // .addEntry('bootstrapjsLogin', './assets/templateLogin/vendor/bootstrap/js/bootstrap.min.js') // modifier les chemins ici
+    // .addEntry('popper', './assets/templateLogin/vendor/bootstrap/js/popper.min.js')
+    // .addEntry('tooltip', './assets/templateLogin/vendor/bootstrap/js/tooltip.js')
+    // .addEntry('countdowntime', './assets/templateLogin/vendor/countdowntime/countdowntime.js')
+    // .addEntry('daterangepicker', './assets/templateLogin/vendor/daterangepicker/daterangepicker.js')
+    // .addEntry('moment', './assets/templateLogin/vendor/daterangepicker/moment.min.js')
+    // .addEntry('jquery321', './assets/templateLogin/vendor/jquery/jquery-3.2.1.min.js')
+    // .addEntry('jquerySlimLogin', './assets/templateLogin/vendor/jquery/jquery.slim.min.js')
+    // .addEntry('jqueryLogin', './assets/templateLogin/vendor/jquery/jquery.min.js')
+    // .addEntry('perfet-scrollbar', './assets/templateLogin/vendor/perfect-scrollbar/perfect-scrollbar.min.js')
+    // .addEntry('select2', './assets/templateLogin/vendor/select2/select2.min.js')
+    // // css
+    // .addStyleEntry('maincss', './assets/templateLogin/css/main.css')
+    // .addStyleEntry('utilcss', './assets/templateLogin/css/util.css')
+    // .addStyleEntry('animateLogin', './assets/templateLogin/vendor/animate/animate.css')
+    // .addStyleEntry('animsitioncss', './assets/templateLogin/vendor/animsition/animsition.min.css')
+    // .addStyleEntry('boostrap-grid', './assets/templateLogin/vendor/bootstrap/bootstrap-grid.min.css')
+    // .addStyleEntry('boostrap-reboot', './assets/templateLogin/vendor/bootstrap/bootstrap-reboot.min.css')
+    // .addStyleEntry('boostrapcssLogin', './assets/templateLogin/vendor/bootstrap/bootstrap-reboot.min.css')
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
     .splitEntryChunks()
 
@@ -83,7 +84,7 @@ Encore
     .enableBuildNotifications()
     .enableSourceMaps(!Encore.isProduction())
     // enables hashed filenames (e.g. app.abc123.css)
-    .enableVersioning(Encore.isProduction())
+    .enableVersioning()
 
     // configure Babel
     // .configureBabel((config) => {
@@ -110,7 +111,7 @@ Encore
     //.enableIntegrityHashes(Encore.isProduction())
 
     // uncomment if you're having problems with a jQuery plugin
-    //.autoProvidejQuery()
+    .autoProvidejQuery()
 ;
 
 module.exports = Encore.getWebpackConfig();

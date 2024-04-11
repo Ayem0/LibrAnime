@@ -1,4 +1,6 @@
-(function ($) {
+
+
+(function($) {
 	
 	"use strict";
 
@@ -35,7 +37,7 @@
 	  }
 	});
 	*/
-	
+	/*
 	$('.filters ul li').click(function(){
         $('.filters ul li').removeClass('active');
         $(this).addClass('active');
@@ -53,7 +55,7 @@
             columnWidth: ".all"
         }
     })
-
+*/
 	var width = $(window).width();
 		$(window).resize(function() {
 			if (width > 992 && $(window).width() < 992) {
@@ -277,6 +279,11 @@
         });
     }
 
+	if($('#create-list-button').length){
+		$("#create-list-button").on('click', function() {	
+			$("#create-list-form").toggle();
+		});
+	}
 
 	
 
