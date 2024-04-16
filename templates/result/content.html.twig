@@ -1,0 +1,41 @@
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-content">
+                <!-- ***** Gaming Library Start ***** -->
+                <div class="gaming-library">
+                    <div class="col-lg-12">
+                        <div class="heading-section">
+                            <h4><em>Result for</em>{% set query = app.request.get('query') %}{% set cleanQuery = query|split('&')|first %} {{ cleanQuery }}  </h4>
+                        </div>
+                        {% if animes %}
+                            {% for anime in animes %}
+                            <div class="item">
+                                <ul>
+                                    <li><img src="{{ asset('/images/game-01.jpg') }}" alt="" class="templatemo-item"></li>
+                                    <li><h4><a href="{{ path('app_anime_details', {'id': anime.id }) }}"> {{ anime.nom }} </a></h4><span>Sandbox</span></li>
+                                    <li><h4>Date Added</h4><span>24/08/2036</span></li>
+                                    <li><h4>Hours Played</h4><span>634 H 22 Mins</span></li>
+                                    <li><h4>Currently</h4><span>Downloaded</span></li>
+                                    <li><div class="main-border-button border-no-active"><a href="#">Donwloaded</a></div></li>
+                                </ul>
+                            </div>
+                            {% endfor %}
+                            {% if pages != 0 %}
+                            {% for i in range(1, pages) %}
+                                <a href="{{ path('app_result_query', {'query': cleanQuery ~ '&page=' ~ i}) }}">Page {{ i }}</a>
+                            {% endfor %}
+                            {% endif %}
+                        {% else %}
+                            <h4><em>No results found</em></h4>
+                        {% endif %}
+                        
+                        
+                        
+                    </div>
+                </div>
+                <!-- ***** Gaming Library End ***** -->
+            </div>
+        </div>
+    </div>
+</div>
