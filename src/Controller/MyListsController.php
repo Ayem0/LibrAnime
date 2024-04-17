@@ -40,8 +40,7 @@ class MyListsController extends AbstractController
             $data = strval($form2->get('search')->getData());
             if ($form2->isSubmitted() && $form2->isValid()) {
                 $data = strval($form2->get('search')->getData());
-                // Retournez la redirection
-                return  $this->redirectToRoute('app_result_query', ['query' => $data . '&page=1&nsw=true']);
+                return  $this->redirectToRoute('app_result_query', ['query' => $data . '&page=1&sfw=true']);
             }
         }
         return $this->render('my_lists/index.html.twig', [

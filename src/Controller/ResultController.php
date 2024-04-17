@@ -18,7 +18,7 @@ class ResultController extends AbstractController
     #[Route('/result/{query}', name: 'app_result_query')]
     public function index(Request $request, EntityManagerInterface $entityManager, $query): Response
     {
-        // Effectuer la requête API avec HttpClient
+        // requete api
         $client = HttpClient::create();
         $response = $client->request('GET', "https://api.jikan.moe/v4/anime?q=$query");
 
@@ -28,6 +28,12 @@ class ResultController extends AbstractController
         $formArray = [];
 
         $user = $this->getUser();
+        $userLists = $user->getListes();
+        $listsArray = [];
+        foreach ($userLists as $element) {
+            $listsArray[] = $element;
+        };
+        $listsArray = array_reverse($listsArray);
 
       
         // si bon
@@ -40,43 +46,39 @@ class ResultController extends AbstractController
             foreach ($animeData as $anime) {
                 $title = $anime['title'];
 
-                $list = new Liste(); // Nouvelle instance de Liste pour chaque itération
+                $list = new Liste();
                 $form2 = $this->createForm(CreateListFormType::class, $list);
-                
-                $formArray[$title] = $form2->createView();
-                // Rechercher l'anime dans la base de données
+                $form2View = $form2->createView();
+                $formArray[$title] = $form2View;
+
                 $existingAnime = $entityManager->getRepository(Anime::class)->findOneBy(['nom' => $title]);
-                // Si l'anime n'existe pas dans la base de données, le créer et l'ajouter à $animesToShow
+
                 if (!$existingAnime) {
                     $newAnime = new Anime();
                     $newAnime->setNom($title);
-                    // Vous pouvez également configurer d'autres propriétés de l'entité Anime ici
                     $entityManager->persist($newAnime);
                     $animesToShow[] = $newAnime;
                 } else {
-                    $animesToShow[] = $existingAnime;
+                    if (in_array($existingAnime, $animesToShow, false) == false) {
+                        $animesToShow[] = $existingAnime;
+                    }
                 }
+                $entityManager->flush();
             }
+        }
+        else {
+            echo 'La requête API a échoué.';
+        }
+        
+        if (isset($form2)) {
             $form2->handleRequest($request);
             if ($form2->isSubmitted() && $form2->isValid()) {
                 $list->setUserId($user);
                 $entityManager->persist($list);
                 $entityManager->flush();
-                // do anything else you need here, like send an email
+                return  $this->redirectToRoute('app_result_query', ['query' => $query ]);
             }
-            $entityManager->flush();
         }
-        else {
-            // Afficher un message d'erreur si la requête a échoué
-            echo 'La requête API a échoué.';
-        }
-        $userLists = $user->getListes();
-        $listsArray = [];
-        foreach ($userLists as $element) {
-            $listsArray[] = $element;
-        };
-        $listsArray = array_reverse($listsArray);
-        // Créer le formulaire de recherche
         $form = $this->createForm(SearchFormType::class);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -104,5 +106,4 @@ class ResultController extends AbstractController
         $entityManager->flush();
         return $this->redirect($request->headers->get('referer'));
     }
-
 }
