@@ -21,14 +21,14 @@ class SearchFormType extends AbstractType
     {
         $builder
             ->add('search', TextType::class, [
-                'label' => 'Rechercher :',
                 'attr' => [
-                    'placeholder' => 'Search a anime',
+                    'label' => false,
+                    'placeholder' => 'Search an anime',
                     'required' => true, // Le champ sera requis
                 ],
             ])
             ->add('submit', SubmitType::class, [
-                'label' => 'Search', // Texte du bouton de soumission
+                'label' => 'Search', 
             ]);
     }
     

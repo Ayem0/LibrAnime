@@ -11,6 +11,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 class CreateListFormType extends AbstractType
 {
@@ -18,11 +19,18 @@ class CreateListFormType extends AbstractType
     {
         $builder
             ->add('nom', TextType::class, [
-                'constraints' => [
-                    new NotBlank([
-                        'message' => 'Please enter a name',
-                    ]),
+                'attr' => [
+                    'label' => false,
+                    'placeholder' => 'New list name',
+                    'maxlength' => "20",
+                    'required' => true,
                 ],
+            ])
+            ->add('create', SubmitType::class, [
+                'attr' => [
+                    'class' => 'btn btn-primary',
+                    'label' => 'Create List'
+                ]
             ]);
     }
 

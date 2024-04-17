@@ -19,13 +19,18 @@
                 <nav class="main-nav">
                     <!-- ***** Logo Start ***** -->
                     <a href="{{ path('app_home') }}" class="logo">
-                        <img src="{{ asset("images/logo.png") }}" alt="">
+                      <img src="{{ asset("images/logo.png") }}" alt="">
                     </a>
                     <!-- ***** Logo End ***** -->
                     <!-- ***** Search End ***** -->
-
-                      {{ form_start(searchForm)}}
+                    <div class="search-input">
+                    {{ form_start(searchForm, {'attr': {'id': 'search',}}) }}
+                      {{ form_widget(searchForm.search, {'attr': {'class': 'searchText',}}) }}
+                      {{ form_widget(searchForm.submit, {'attr': {'style': 'display: none'}}) }}
+                      <i class="fa fa-search"></i>
                       {{ form_end(searchForm)}}
+                    </div>
+                      
                      
                     
                     <!-- ***** Search End ***** -->

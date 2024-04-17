@@ -26,8 +26,7 @@ class MyListsController extends AbstractController
             $entityManager->flush();
             // do anything else you need here, like send an email
         }
-
-        if ($user ) {
+        if ($user) {
             $lists = $user->getListes();
             $listsArray = [];
             foreach ($lists as $element) {
@@ -36,6 +35,15 @@ class MyListsController extends AbstractController
             $listsArray = array_reverse($listsArray);
         }
         $form2 = $this->createForm(SearchFormType::class);
+        $form2->handleRequest($request);
+        if ($form2->isSubmitted() && $form2->isValid()) {
+            $data = strval($form2->get('search')->getData());
+            if ($form2->isSubmitted() && $form2->isValid()) {
+                $data = strval($form2->get('search')->getData());
+                // Retournez la redirection
+                return  $this->redirectToRoute('app_result_query', ['query' => $data . '&page=1&nsw=true']);
+            }
+        }
         return $this->render('my_lists/index.html.twig', [
             'listes'=> $listsArray,
             'form'=>$form,

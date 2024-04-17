@@ -6,32 +6,49 @@
                 <div class="gaming-library">
                     <div class="col-lg-12">
                         <div class="heading-section">
-                            <h4><em>Result for</em>{% set query = app.request.get('query') %}{% set cleanQuery = query|split('&')|first %} {{ cleanQuery }}  </h4>
+                            <h4><em>{{ nbResult }} Results for</em>{% set query = app.request.get('query') %}{% set cleanQuery = query|split('&')|first %} {{ cleanQuery }}  </h4>
                         </div>
+                        
                         {% if animes %}
                             {% for anime in animes %}
-                            <div class="item">
-                                <ul>
-                                    <li><img src="{{ asset('/images/game-01.jpg') }}" alt="" class="templatemo-item"></li>
-                                    <li><h4><a href="{{ path('app_anime_details', {'id': anime.id }) }}"> {{ anime.nom }} </a></h4><span>Sandbox</span></li>
-                                    <li><h4>Date Added</h4><span>24/08/2036</span></li>
-                                    <li><h4>Hours Played</h4><span>634 H 22 Mins</span></li>
-                                    <li><h4>Currently</h4><span>Downloaded</span></li>
-                                    <li><div class="main-border-button border-no-active"><a href="#">Donwloaded</a></div></li>
-                                </ul>
-                            </div>
+                                <div class="item">
+                                    <ul>
+                                        <li><img src="{{ asset('/images/game-01.jpg') }}" alt="" class="templatemo-item"></li>
+                                        <li><h4><a href="{{ path('app_anime_details', {'id': anime.id }) }}">{{ anime.nom }}</a></h4><span>Sandbox</span></li>
+                                        <li><h4>Date Added</h4><span>24/08/2036</span></li>
+                                        <li><h4>Hours Played</h4><span>634 H 22 Mins</span></li>
+                                        <li><h4>Currently</h4><span>Downloaded</span></li>
+                                        <li><button class="btn btn-primary add-to-list" data-anime-id="{{ anime.id }}"><i class="fa fa-plus"></i> Add To List</button></li>
+                                    </ul>
+                                </div>
+                                <div id="list-options-{{ anime.id }}" class="list-options" style="display: none;">
+                                    <div class="dialog-container">
+                                        {% for list in lists %}
+                                            <div class="main-border-button"><a href="{{ path('app_add_anime_in_list', {'liste': list.id, 'anime': anime.id}) }}">{{ list.nom }}{% if anime in list.anime %} <i class="fa fa-check"></i>{% endif %}</a></div>
+                                        {% endfor %}
+                                        <button class="btn btn-primary create-list-button" data-anime-id="{{ anime.id }}"><i class="fa fa-plus"></i> Create list</button>
+                                        <div id="create-list-form-{{ anime.id }}" style="display: none;" class="center">
+                                            {% set formNomCopy = form2[anime.nom].nom %}
+                                            {% set formCreateCopy = form2[anime.nom].create %}
+                                            <form name="create_list_form" method="post" class="center">
+                                                {{ form_widget(formNomCopy) }}
+                                                {{ form_widget(formCreateCopy) }}
+                                            </form>
+                                        </div>
+                                    </div>   
+                                </div> 
                             {% endfor %}
                             {% if pages != 0 %}
-                            {% for i in range(1, pages) %}
-                                <a href="{{ path('app_result_query', {'query': cleanQuery ~ '&page=' ~ i}) }}">Page {{ i }}</a>
-                            {% endfor %}
+                                {% for i in range(1, pages) %}
+                                    <a href="{{ path('app_result_query', {'query': cleanQuery ~ '&page=' ~ i ~ '&sfw=true'}) }}"
+                                    {% if ('page=' ~ i) in query %}
+                                        style="color: #e75e8d"
+                                    {% endif %}>Page {{ i }}</a>
+                                {% endfor %}
                             {% endif %}
                         {% else %}
                             <h4><em>No results found</em></h4>
                         {% endif %}
-                        
-                        
-                        
                     </div>
                 </div>
                 <!-- ***** Gaming Library End ***** -->

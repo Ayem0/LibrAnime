@@ -10,11 +10,12 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\HttpFoundation\Request;
 
 class ListDetailsController extends AbstractController
 {
     #[Route('/list/{id}', name: 'app_list')]
-    public function index(ManagerRegistry $doctrine, int $id): Response
+    public function index(ManagerRegistry $doctrine, int $id, Request $request): Response
     {
         $list = $doctrine->getRepository(Liste::class)->findOneBy(['id' => $id]);
         $animeInList = $list->getAnime();
@@ -22,18 +23,25 @@ class ListDetailsController extends AbstractController
         foreach ($animeInList as $element) {
             $listAnime[] = $element;
         };
-        $form2 = $this->createForm(SearchFormType::class);
+        $form = $this->createForm(SearchFormType::class);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $data = strval($form->get('search')->getData());
+            if ($form->isSubmitted() && $form->isValid()) {
+                $data = strval($form->get('search')->getData());
+                return  $this->redirectToRoute('app_result_query', ['query' => $data . '&page=1&nsw=true']);
+            }
+        }
         return $this->render('list_details/index.html.twig', [
             'liste' => $list,
             'animeInList' => $listAnime,
-            'searchForm'=> $form2,
+            'searchForm'=> $form,
         ]);
     }
 
     #[Route('/list/{liste<\d+>}/remove-anime/{anime<\d+>}', name: 'app_remove_anime_in_list')]
-    public function removeAnimeInList(Liste $liste, Anime $anime, EntityManagerInterface $entityManager, ManagerRegistry $doctrine): Response
+    public function removeAnimeInList(Liste $liste, Anime $anime, EntityManagerInterface $entityManager): Response
     {
-        //$list = $doctrine->getRepository(Liste::class)->findOneBy(['id' => $id]);
         $user = $this->getUser();
         if ( $user ) {
             $liste->removeAnime($anime);

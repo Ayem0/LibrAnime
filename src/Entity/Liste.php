@@ -72,14 +72,12 @@ class Liste
         if (!$this->anime->contains($anime)) {
             $this->anime->add($anime);
         }
-
         return $this;
     }
 
     public function removeAnime(Anime $anime): static
     {
         $this->anime->removeElement($anime);
-
         return $this;
     }
 }
