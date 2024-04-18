@@ -9,12 +9,12 @@
               <div class="feature-banner header-text">
                 <div class="row">
                   <div class="col-lg-4">
-                    <img src="{{ asset('images/feature-left.jpg') }}" alt="" style="border-radius: 23px;">
+                    <img src="{{ anime.image }}" alt="" style="border-radius: 23px;">
                   </div>
                   <div class="col-lg-8">
                     <div class="thumb">
-                      <img src="{{ asset('images/feature-right.jpg') }}" alt="" style="border-radius: 23px;">
-                      <a href="https://www.youtube.com/watch?v=r1b03uKWk_M" target="_blank"><i class="fa fa-play"></i></a>
+                      <img src="{{ anime.trailerImg }}" alt="" style="border-radius: 23px;">
+                      <a href="{{ anime.trailerUrl }}" target="_blank"><i class="fa fa-play"></i></a>
                     </div>
                   </div>
                 </div>
@@ -39,7 +39,7 @@
                           <span>
                           {% for categorie in categories %}
                             <a href="{{ path('app_categorie_details', {'id': categorie.id })}}">{{categorie.nom}}</a>
-                            {% endfor %}
+                          {% endfor %}
                           </span>
                         </div>
                         <ul>
@@ -51,8 +51,8 @@
                     <div class="col-lg-6">
                       <div class="right-info">
                         <ul>
-                          <li><i class="fa fa-star"></i> 4.8</li>
-                          <li><i class="fa fa-download"></i> 2.3M</li>
+                          <li><i class="fa fa-star"></i> {% if anime.episodes is not null %} {{ anime.episodes }}{% else %} - {% endif %}</li>
+                          <li><i class="fa fa-download"></i> {% if anime.year is not null %} {{ anime.year }}{% else %} - {% endif %}</li>
                           <li><i class="fa fa-server"></i> 36GB</li>
                           <li><i class="fa fa-gamepad"></i> Action</li>
                         </ul>
@@ -68,12 +68,32 @@
                       <img src="{{ asset('images/details-03.jpg') }}" alt="" style="border-radius: 23px; margin-bottom: 30px;">
                     </div>
                     <div class="col-lg-12">
-                      <p>Cyborg Gaming is free HTML CSS website template provided by TemplateMo. This is Bootstrap v5.2.0 layout. You can make a <a href="https://paypal.me/templatemo" target="_blank">small contribution via PayPal</a> to info [at] templatemo.com and thank you for supporting. If you want to get the PSD source files, please contact us. Lorem ipsum dolor sit consectetur es dispic dipiscingei elit, sed doers eiusmod lisum hored tempor.</p>
+                      <p>{{ anime.synopsis }}</p>
                     </div>
                     <div class="col-lg-12">
-                      <div class="main-border-button">
-                        <a href="#">Download Fortnite Now!</a>
-                      </div>
+                      {% if app.user  %}<button style="width: 100%;" class="btn btn-primary add-to-list" data-anime-id="{{ anime.id }}"><i class="fa fa-plus"></i> Add To List</button>{% else %}<div class="main-border-button"><a href="{{ path('app_login')}}">Login To Add To List</a></div>{% endif %}
+                        {% if app.user %}
+                        <div id="list-options-{{ anime.id }}" class="list-options" style="display: none;">
+                            <div class="dialog-container">
+                                <button class="closeButton add-to-list" data-anime-id="{{ anime.id }}"><img src="{{ asset('/images/cross.png') }}" alt=""></button>
+                                <div class="heading-section">
+                                    <h4>Save in...</h4>
+                                </div>
+                                <div class="overflow-auto">
+                                {% for list in lists %}
+                                    <div class="main-border-button" style="margin: 0;"><a href="{{ path('app_add_anime_in_list', {'liste': list.id, 'anime': anime.id}) }}">{{ list.nom }}{% if anime in list.anime %} <i class="fa fa-check"></i>{% endif %}</a></div>
+                                {% endfor %}
+                                </div>
+                                <button class="btn btn-primary create-list-button mt-2" data-anime-id="{{ anime.id }}"><i class="fa fa-plus"></i> Create list</button>
+                                <div id="create-list-form-{{ anime.id }}" style="display: none;" class="center"> 
+                                    {{ form_start(listForm, {'attr': {'class': 'center'}}) }}
+                                        {{ form_widget(listForm.nom) }}
+                                        {{ form_widget(listForm.create) }}
+                                    {{ form_end(listForm) }}
+                                </div>
+                            </div>   
+                        </div> 
+                        {% endif %}
                     </div>
                   </div>
                 </div>
@@ -90,15 +110,18 @@
                   <h4><em>Other Related</em> Games</h4>
                 </div>
               </div>
-              {% for i in 0..7 %}
+              {% for i in 0..8 %}
               <div class="col-lg-6">
                 <div class="item">
+                  
                   <img src="{{ asset('images/game-01.jpg') }}" alt="" class="templatemo-item">
-                  <h4>Dota 2</h4><span>Sandbox</span>
+                  <h4>Dota 2</h4>
                   <ul>
                     <li><i class="fa fa-star"></i> 4.8</li>
                     <li><i class="fa fa-download"></i> 2.3M</li>
                   </ul>
+                  <span>Sandbox</span>
+                  
                 </div>
               </div>
               {% endfor %}

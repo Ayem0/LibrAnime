@@ -18,7 +18,12 @@ class ListDetailsController extends AbstractController
     public function index(ManagerRegistry $doctrine, int $id, Request $request): Response
     {
         $list = $doctrine->getRepository(Liste::class)->findOneBy(['id' => $id]);
-        $animeInList = $list->getAnime();
+        $animeInList = $list->getAnime()->toArray();
+        usort($animeInList, function($a, $b) {
+            $nomA = strtolower($a->getNom());
+            $nomB = strtolower($b->getNom());
+            return strcmp($nomA, $nomB);
+        });
         $listAnime = [];
         foreach ($animeInList as $element) {
             $listAnime[] = $element;

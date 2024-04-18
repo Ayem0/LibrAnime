@@ -13,11 +13,9 @@
                   {% for categorie in categories %}
                   <div class="col-lg-3 col-sm-6">
                     <div class="item">
-                      <img src="{{ asset('images/popular-01.jpg') }}" alt="">
-                      <h4><a href="{{ path('app_categorie_details', {'id': categorie.id }) }}">{{ categorie.nom }}</a><br><span>Sandbox</span></h4>
+                      <h4><a href="{{ path('app_categorie_details', {'id': categorie.id }) }}">{{ categorie.nom }}</a><br></h4>
                       <ul>
-                        <li><i class="fa fa-star"></i> 4.8</li>
-                        <li><i class="fa fa-download"></i> 2.3M</li>
+                        <li><i class="fa fa-star"></i> {{ animeInCategorie[categorie.id] }}</li>
                       </ul>
                     </div>
                   </div>

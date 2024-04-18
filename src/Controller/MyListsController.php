@@ -26,14 +26,24 @@ class MyListsController extends AbstractController
             $entityManager->flush();
             // do anything else you need here, like send an email
         }
+        
+        $listsArray = [];
+
         if ($user) {
-            $lists = $user->getListes();
-            $listsArray = [];
-            foreach ($lists as $element) {
-                $listsArray[] = $element;
-            };
-            $listsArray = array_reverse($listsArray);
+            $lists = $user->getListes()->getValues(); 
+            usort($lists, function($a, $b) {
+                $nomA = strtolower($a->getNom());
+                $nomB = strtolower($b->getNom());
+                return strcmp($nomA, $nomB);
+            });
+            $listsArray = $lists;
         }
+        $listsCount = [];
+        foreach ($listsArray as $element) {
+            $animeInList = $element->getAnime();
+            $listsCount[$element->getId()] = count($animeInList);
+        }
+
         $form2 = $this->createForm(SearchFormType::class);
         $form2->handleRequest($request);
         if ($form2->isSubmitted() && $form2->isValid()) {
@@ -47,6 +57,7 @@ class MyListsController extends AbstractController
             'listes'=> $listsArray,
             'form'=>$form,
             'searchForm' => $form2,
+            'listsCount' => $listsCount
         ]);
     }
     

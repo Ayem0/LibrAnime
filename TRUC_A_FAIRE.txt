@@ -1,0 +1,30 @@
+// A FAIRE
+
+
+// IMPORTANT
+- RECUPERER LES INFOS DES ANIMES :
+    - myAnimeListid        $anime['mal_id']  int
+    - demographics             $anime['demographics'][i]['name'] c un tableau puis une string
+    - categories          $anime['genres'][i]['name']  c un tableau puis une string
+    - images                    $anime['images']['jpg']['image_url']
+    - synopsis           $anime['synopsis'] string
+    - trailer               $anime['trailer']['url']  string
+    - trailerImg        $anime['trailer']['images']['image_url'] 
+    - episodes          $anime['episodes']    int
+    - year $anime['year'] int
+
+
+
+- PAGE HOME
+- PAGE MY ACCOUNT
+- PAGE CATEGORIE :
+    - ajouter nombre d'animes dans la categorie
+    - 
+
+- PAGE ANIME DETAILS :
+    - ajouter les relations de l'anime
+    
+
+
+// PLUS
+

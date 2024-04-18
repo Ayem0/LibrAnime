@@ -13,20 +13,36 @@
                             {% for anime in animes %}
                                 <div class="item">
                                     <ul>
-                                        <li><img src="{{ asset('/images/game-01.jpg') }}" alt="" class="templatemo-item"></li>
-                                        <li><h4><a href="{{ path('app_anime_details', {'id': anime.id }) }}">{{ anime.nom }}</a></h4><span>Sandbox</span></li>
-                                        <li><h4>Date Added</h4><span>24/08/2036</span></li>
-                                        <li><h4>Hours Played</h4><span>634 H 22 Mins</span></li>
+                                        <li><a href="{{ path('app_anime_details', {'id': anime.id }) }}"><img src="{{ anime.image }}" alt="" class="templatemo-item"></a></li>
+                                        <li><h4><a href="{{ path('app_anime_details', {'id': anime.id }) }}">{{ anime.nom }}</a></h4>{% for categorie in anime.categorie %}<span><a href="{{ path('app_categorie_details', {'id': categorie.id }) }}">{{ categorie.nom }} </a></span>{% endfor %}</li>
+                                        <li><h4>Year</h4><span>{% if anime.year is not null %} {{ anime.year }}{% else %} - {% endif %}</span></li>
+                                        <li><h4>Episodes</h4><span>{% if anime.episodes is not null %} {{ anime.episodes }}{% else %} - {% endif %}</span></li>
                                         <li><h4>Currently</h4><span>Downloaded</span></li>
-                                        <li><button class="btn btn-primary add-to-list" data-anime-id="{{ anime.id }}"><i class="fa fa-plus"></i> Add To List</button></li>
+                                        <li>{% if app.user  %}<button class="btn btn-primary add-to-list" data-anime-id="{{ anime.id }}"><i class="fa fa-plus"></i> Add To List</button>{% else %}<div class="main-border-button"><a href="{{ path('app_login')}}">Add to List</a></div>{% endif %}</li>
                                     </ul>
                                 </div>
+                                
+                                {% if app.user %}
                                 <div id="list-options-{{ anime.id }}" class="list-options" style="display: none;">
                                     <div class="dialog-container">
-                                        {% for list in lists %}
-                                            <div class="main-border-button"><a href="{{ path('app_add_anime_in_list', {'liste': list.id, 'anime': anime.id}) }}">{{ list.nom }}{% if anime in list.anime %} <i class="fa fa-check"></i>{% endif %}</a></div>
-                                        {% endfor %}
-                                        <button class="btn btn-primary create-list-button" data-anime-id="{{ anime.id }}"><i class="fa fa-plus"></i> Create list</button>
+                                        <button class="closeButton add-to-list" data-anime-id="{{ anime.id }}"><img src="{{ asset('/images/cross.png') }}" alt=""></button>
+                                        <div class="heading-section">
+                                            <h4>Save in...</h4>
+                                        </div>
+                                        <div class="overflow-auto">
+                                            {% for list in lists %}
+                                                <div class="main-border-button text-center" style="margin: 0;">
+                                                    <a style="width: 100%;" href="{{ path('app_add_anime_in_list', {'liste': list.id, 'anime': anime.id}) }}" >
+                                                        {{ list.nom }}
+                                                        {% if anime in list.anime %}
+                                                            <i class="fa fa-check"></i>
+                                                        {% endif %}
+                                                    </a>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                        
+                                        <button class="btn btn-primary create-list-button mt-2" data-anime-id="{{ anime.id }}"><i class="fa fa-plus"></i> Create list</button>
                                         <div id="create-list-form-{{ anime.id }}" style="display: none;" class="center"> 
                                             {{ form_start(form2[anime.nom], {'attr': {'class': 'center'}}) }}
                                                 {{ form_widget(form2[anime.nom].nom) }}
@@ -35,10 +51,12 @@
                                         </div>
                                     </div>   
                                 </div> 
+                                {% endif %}
+                                
                             {% endfor %}
                             {% if pages != 0 %}
                                 {% for i in range(1, pages) %}
-                                    <a href="{{ path('app_result_query', {'query': cleanQuery ~ '&page=' ~ i ~ '&sfw=true'}) }}"
+                                    <a href="{{ path('app_result_query', {'query': cleanQuery ~ '&page=' ~ i }) }}"
                                     {% if ('page=' ~ i) in query %}
                                         style="color: #e75e8d"
                                     {% endif %}>Page {{ i }}</a>

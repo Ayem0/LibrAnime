@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\AnimeRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: AnimeRepository::class)]
@@ -24,6 +25,27 @@ class Anime
 
     #[ORM\ManyToMany(targetEntity: Liste::class, mappedBy: 'anime')]
     private Collection $listes;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $image = null;
+
+    #[ORM\Column]
+    private ?int $mal_id = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $trailerUrl = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $trailerImg = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $episodes = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $year = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $synopsis = null;
 
     public function __construct()
     {
@@ -95,6 +117,90 @@ class Anime
         if ($this->listes->removeElement($liste)) {
             $liste->removeAnime($this);
         }
+
+        return $this;
+    }
+
+    public function getImage(): ?string
+    {
+        return $this->image;
+    }
+
+    public function setImage(?string $image): static
+    {
+        $this->image = $image;
+
+        return $this;
+    }
+
+    public function getMalId(): ?int
+    {
+        return $this->mal_id;
+    }
+
+    public function setMalId(int $mal_id): static
+    {
+        $this->mal_id = $mal_id;
+
+        return $this;
+    }
+
+    public function getTrailerUrl(): ?string
+    {
+        return $this->trailerUrl;
+    }
+
+    public function setTrailerUrl(?string $trailerUrl): static
+    {
+        $this->trailerUrl = $trailerUrl;
+
+        return $this;
+    }
+
+    public function getTrailerImg(): ?string
+    {
+        return $this->trailerImg;
+    }
+
+    public function setTrailerImg(?string $trailerImg): static
+    {
+        $this->trailerImg = $trailerImg;
+
+        return $this;
+    }
+
+    public function getEpisodes(): ?int
+    {
+        return $this->episodes;
+    }
+
+    public function setEpisodes(?int $episodes): static
+    {
+        $this->episodes = $episodes;
+
+        return $this;
+    }
+
+    public function getYear(): ?int
+    {
+        return $this->year;
+    }
+
+    public function setYear(?int $year): static
+    {
+        $this->year = $year;
+
+        return $this;
+    }
+
+    public function getSynopsis(): ?string
+    {
+        return $this->synopsis;
+    }
+
+    public function setSynopsis(?string $synopsis): static
+    {
+        $this->synopsis = $synopsis;
 
         return $this;
     }

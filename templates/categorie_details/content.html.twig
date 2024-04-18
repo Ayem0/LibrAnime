@@ -13,13 +13,48 @@
                   {% for anime in listeAnime %}
                   <div class="col-lg-3 col-sm-6">
                     <div class="item">
-                      <img src="{{ asset('images/popular-01.jpg') }}" alt="">
-                      <h4><a href="{{ path('app_anime_details', {'id': anime.id }) }}">{{ anime.nom }}</a><br><span>Sandbox</span></h4>
-                      <ul>
-                        <li><i class="fa fa-star"></i> 4.8</li>
-                        <li><i class="fa fa-download"></i> 2.3M</li>
-                      </ul>
-                    </div>
+                      <a href="{{ path('app_anime_details', {'id': anime.id }) }}">
+                        <img src="{{ anime.image }}" alt="">
+                      </a>
+                      <h4><a href="{{ path('app_anime_details', {'id': anime.id }) }}">{{ anime.nom }}</a><br><span>{% for categorie in anime.categorie %}<a href="{{ path('app_categorie_details', {'id': categorie.id }) }}">{{ categorie.nom }} </a>{% endfor %}</span></h4>
+                      <div class="d-flex justify-content-between">
+                        <span>Episodes :  {% if anime.episodes is not null %} {{ anime.episodes }}{% else %} - {% endif %}</span>
+                        <span>Year : {% if anime.year is not null %} {{ anime.year }}{% else %} - {% endif %}</span>       
+                      </div>
+                    
+                    
+                    {% if app.user  %}<button style="width: 100%;" class="btn btn-primary add-to-list mt-2" data-anime-id="{{ anime.id }}"><i class="fa fa-plus"></i> Add To List</button>{% else %}<div class="main-border-button"><a href="{{ path('app_login')}}">Add to List</a></div>{% endif %}
+                                {% if app.user %}
+                                <div id="list-options-{{ anime.id }}" class="list-options" style="display: none;">
+                                    <div class="dialog-container">
+                                        <button class="closeButton add-to-list" data-anime-id="{{ anime.id }}"><img src="{{ asset('/images/cross.png') }}" alt=""></button>
+                                        <div class="heading-section new-h4">
+                                            <h4>Save in...</h4>
+                                        </div>
+                                        <div class="overflow-auto">
+                                            {% for list in lists %}
+                                                <div class="main-border-button text-center" style="margin: 0;">
+                                                    <a style="width: 100%;" href="{{ path('app_add_anime_in_list', {'liste': list.id, 'anime': anime.id}) }}" >
+                                                        {{ list.nom }}
+                                                        {% if anime in list.anime %}
+                                                            <i class="fa fa-check"></i>
+                                                        {% endif %}
+                                                    </a>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                        
+                                        <button class="btn btn-primary create-list-button mt-2" data-anime-id="{{ anime.id }}"><i class="fa fa-plus"></i> Create list</button>
+                                        <div id="create-list-form-{{ anime.id }}" style="display: none;" class="center"> 
+                                            {{ form_start(createListForm[anime.id], {'attr': {'class': 'center'}}) }}
+                                                {{ form_widget(createListForm[anime.id].nom) }}
+                                                {{ form_widget(createListForm[anime.id].create) }}
+                                            {{ form_end(createListForm[anime.id]) }}
+                                        </div>
+                                    </div>   
+                                </div> 
+                                {% endif %}
+                              </div>
                   </div>
                   {% endfor %}
                 </div>

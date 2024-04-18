@@ -24,7 +24,7 @@
             wow.init();
         }
     });
-
+	/*
 	var width = $(window).width();
 		$(window).resize(function() {
 			if (width > 992 && $(window).width() < 992) {
@@ -34,7 +34,7 @@
 				location.reload();
 			}
 	})
-
+	*/
 
 
 	$(document).on("click", ".naccs .menu div", function() {
@@ -207,6 +207,12 @@
 
 	if($('#create-list-button').length){
 		$("#create-list-button").on('click', function() {	
+			$("#create-list-form").toggle();
+		});
+	}
+
+	if($('#close-list-button').length){
+		$("#close-list-button").on('click', function() {	
 			$("#create-list-form").toggle();
 		});
 	}

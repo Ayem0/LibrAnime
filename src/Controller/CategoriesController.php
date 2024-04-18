@@ -15,6 +15,16 @@ class CategoriesController extends AbstractController
     public function index(ManagerRegistry $doctrine, Request $request): Response
     {
         $categories = $doctrine->getRepository(Categorie::class)->findAll();
+        usort($categories, function($a, $b) {
+            return strcmp($a->getNom(), $b->getNom());
+        });
+
+        $catgoriesCount = [];
+        foreach ($categories as $categorie) {
+            $animeInCategorie = $categorie->getAnimes();
+            $catgoriesCount[$categorie->getId()] = count($animeInCategorie);
+        }
+        
         $form = $this->createForm(SearchFormType::class);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -26,6 +36,7 @@ class CategoriesController extends AbstractController
         }
         return $this->render('categories/index.html.twig', [
             'categories' => $categories,
+            'animeInCategorie' => $catgoriesCount,
             'searchForm' => $form,
         ]);
     }

@@ -1405,7 +1405,6 @@ Other Related Style
 }
 
 .other-games .item {
-  position: relative;
   border-bottom: 1px solid #27292a;
   padding-bottom: 52px;
   margin-bottom: 30px;
@@ -1430,9 +1429,10 @@ Other Related Style
 }
 
 .other-games ul {
-  position: absolute;
-  right: 0;
-  top: 15px;
+  padding-top: 15px;
+  float: right;
+  display: flex;
+  flex-direction: column;
 }
 
 .other-games ul li {
@@ -1631,19 +1631,44 @@ Profile Style
   text-align: center;
 }
 
-
 /* TRUC QUE JAI AJOUTE */
 
-.dialog-container {
-  max-width: 350px; 
+.closeButton {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  border: none;
+  border-radius: 10px;
+  font-size: 20px;
   background-color: white; 
-  padding: 32px;
+}
+.new-h4 h4 {
+  font-size: 34px !important;
+  padding-bottom: 30px;
+}
+.bottom-right {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+}
+
+
+.dialog-container {
+  max-width: 350px;
+  min-width: 250px;
+  background-color: white; 
+  padding: 32px 32px 16px 32px;
   border-radius: 25px;
   border: 1px solid rgb(30, 30, 30);
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  box-shadow: 0px 0px 200px 200px rgba(0, 0, 0, 0.5); /* Horizontal offset, Vertical offset, Blur radius, Spread radius, Color */
+}
+
+.overflow-auto {
+  max-height: 350px; 
 }
 
 .list-options {
@@ -1678,6 +1703,11 @@ Profile Style
   padding: 0px 15px 0px 45px;
   position: relative;
 }
+
+.margin-top {
+  margin-top: 60px;
+}
+
 /* 
 ---------------------------------------------
 Responsive Style
@@ -1779,12 +1809,4 @@ body {
   .gaming-library .item ul li {
     width: 16%;
   }
-}
-
-/* 
-STYLES AJOUTES
-*/
-
-.margin-top {
-  margin-top: 60px;
 }

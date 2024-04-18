@@ -22,7 +22,7 @@ class CreateListFormType extends AbstractType
                 'attr' => [
                     'label' => false,
                     'placeholder' => 'New list name',
-                    'maxlength' => "20",
+                    'maxlength' => "15",
                     'required' => true,
                 ],
             ])
