@@ -3,23 +3,34 @@
         <div class="col-lg-12">
             <div class="page-content">
                 <!-- ***** Gaming Library Start ***** -->
-                <div class="gaming-library">
-                    <div class="col-lg-12">
-                        <div class="heading-section">
+                    <div class="live-stream">
+                        <div class="col-lg-12">
+                          <div class="heading-section">
                             <h4><em>{{ nbResult }} Results for</em>{% set query = app.request.get('query') %}{% set cleanQuery = query|split('&')|first %} {{ cleanQuery }}  </h4>
                         </div>
-                        
+                        <div class="row">
                         {% if animes %}
                             {% for anime in animes %}
+                            <div class="col-lg-3 col-sm-6">
+                                
                                 <div class="item">
-                                    <ul>
-                                        <li><a href="{{ path('app_anime_details', {'id': anime.id }) }}"><img src="{{ anime.image }}" alt="" class="templatemo-item"></a></li>
-                                        <li><h4><a href="{{ path('app_anime_details', {'id': anime.id }) }}">{{ anime.nom }}</a></h4>{% for categorie in anime.categorie %}<span><a href="{{ path('app_categorie_details', {'id': categorie.id }) }}">{{ categorie.nom }} </a></span>{% endfor %}</li>
-                                        <li><h4>Year</h4><span>{% if anime.year is not null %} {{ anime.year }}{% else %} - {% endif %}</span></li>
-                                        <li><h4>Episodes</h4><span>{% if anime.episodes is not null %} {{ anime.episodes }}{% else %} - {% endif %}</span></li>
-                                        <li><h4>Currently</h4><span>Downloaded</span></li>
-                                        <li>{% if app.user  %}<button class="btn btn-primary add-to-list" data-anime-id="{{ anime.id }}"><i class="fa fa-plus"></i> Add To List</button>{% else %}<div class="main-border-button"><a href="{{ path('app_login')}}">Add to List</a></div>{% endif %}</li>
-                                    </ul>
+                                    <div class="thumb">
+                                      <a href="{{ path('app_anime_details', {'id': anime.id }) }}">
+                                        <img src="{{ anime.image }}" alt="">
+                                      </a>
+                                      <div class="hover-effect">
+                                        <div class="content">
+                                          <ul>
+                                            <li>{% if app.user  %}<button class="btn btn-primary add-to-list" data-anime-id="{{ anime.id }}"><i class="fa fa-plus"></i> Add To List</button>{% else %}<div class="main-border-button"><a href="{{ path('app_login')}}">Add to List</a></div>{% endif %}</li>
+                                          </ul>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div class="down-content d-flex justify-content-center align-items-center">
+                                      
+                                        <a href="{{ path('app_anime_details', {'id': anime.id }) }}"> {{ anime.nom }}</a>
+                                      
+                                    </div> 
                                 </div>
                                 
                                 {% if app.user %}
@@ -44,28 +55,29 @@
                                         
                                         <button class="btn btn-primary create-list-button mt-2" data-anime-id="{{ anime.id }}"><i class="fa fa-plus"></i> Create list</button>
                                         <div id="create-list-form-{{ anime.id }}" style="display: none;" class="center"> 
-                                            {{ form_start(form2[anime.nom], {'attr': {'class': 'center'}}) }}
-                                                {{ form_widget(form2[anime.nom].nom) }}
-                                                {{ form_widget(form2[anime.nom].create) }}
-                                            {{ form_end(form2[anime.nom]) }}
+                                            {{ form_start(form2[anime.id], {'attr': {'class': 'center'}}) }}
+                                                {{ form_widget(form2[anime.id].nom) }}
+                                                {{ form_widget(form2[anime.id].create) }}
+                                            {{ form_end(form2[anime.id]) }}
                                         </div>
                                     </div>   
                                 </div> 
                                 {% endif %}
-                                
+                            </div>
                             {% endfor %}
-                            {% if pages != 0 %}
+                        </div>
+                            {% if pages > 1 %}
                                 {% for i in range(1, pages) %}
-                                    <a href="{{ path('app_result_query', {'query': cleanQuery ~ '&page=' ~ i }) }}"
-                                    {% if ('page=' ~ i) in query %}
+                                    <a href="{{ path('app_result_query', {'query': cleanQuery, 'page': i}) }}"
+                                    {% if currentPage == i %}
                                         style="color: #e75e8d"
-                                    {% endif %}>Page {{ i }}</a>
+                                    {% endif %}>{{ i }}</a>
                                 {% endfor %}
                             {% endif %}
                         {% else %}
                             <h4><em>No results found</em></h4>
                         {% endif %}
-                    </div>
+                    
                 </div>
                 <!-- ***** Gaming Library End ***** -->
             </div>

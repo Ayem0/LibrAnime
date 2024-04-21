@@ -34,7 +34,7 @@ class ListDetailsController extends AbstractController
             $data = strval($form->get('search')->getData());
             if ($form->isSubmitted() && $form->isValid()) {
                 $data = strval($form->get('search')->getData());
-                return  $this->redirectToRoute('app_result_query', ['query' => $data . '&page=1&nsw=true']);
+                return  $this->redirectToRoute('app_result_query', ['query' => $data, 'page' => 1]);
             }
         }
         return $this->render('list_details/index.html.twig', [

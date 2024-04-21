@@ -29,15 +29,15 @@
                                 
                             </div>
                         <div class="row">
-                  {% for liste in listes %}
+                  {% for list in lists %}
                   <div class="col-lg-3 col-sm-6">
                     
                       <div class="item">
-                          <h4><a href="{{ path('app_list', {'id': liste.id}) }}">{{ liste.nom }}</a></h4>
+                          <h4><a href="{{ path('app_list', {'id': list.id}) }}">{{ list.nom }}</a></h4>
                           <ul>
-                              <li><i class="fa fa-star"></i> {{ listsCount[liste.id] }}</li>
+                              <li><i class="fa fa-star"></i> {{ listsCount[list.id] }}</li>
                           </ul>
-                          <form action="{{ path('app_remove_list', {'id': liste.id}) }}" method="post">
+                          <form action="{{ path('app_remove_list', {'id': list.id}) }}" method="post">
                               <input type="hidden" name="_method" value="DELETE">
                               <div class="d-flex justify-content-end pt-3">
                           

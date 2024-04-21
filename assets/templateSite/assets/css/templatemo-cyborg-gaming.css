@@ -113,6 +113,7 @@ p {
 
 img {
   width: 100%;
+  height: 100%;
   overflow: hidden;
 }
 
@@ -153,6 +154,7 @@ p {
 
 .templatemo-item {
 	max-width: 80px; 
+  height: 110px;
 	border-radius: 23px;
 }
 
@@ -827,6 +829,7 @@ Most Popular Style
 }
 
 .most-popular .item img {
+  height: 300px;
   border-radius: 23px;
 }
 
@@ -968,7 +971,7 @@ Featured Games Style
 }
 
 .featured-games .item .thumb {
-  position: relative;
+  
   overflow: hidden;
 }
 
@@ -1170,7 +1173,6 @@ Live Stream Style
 */
 
 .live-stream {
-  margin-top: 60px;
   border-radius: 23px;
   background-color: #1f2122;
   padding: 30px;
@@ -1187,6 +1189,8 @@ Live Stream Style
 }
 
 .live-stream .thumb img {
+  z-index: 1;
+  height: 370px;
   border-radius: 23px; 
 }
 
@@ -1642,6 +1646,12 @@ Profile Style
   font-size: 20px;
   background-color: white; 
 }
+
+.closeButton img {
+  height: 32px !important;
+  width: 32px;
+}
+
 .new-h4 h4 {
   font-size: 34px !important;
   padding-bottom: 30px;
@@ -1673,6 +1683,7 @@ Profile Style
 
 .list-options {
   padding: 0;
+  z-index: 5;
   position: fixed;
   justify-content: center;
   align-items: center;

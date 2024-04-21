@@ -1,46 +1,50 @@
 <div class="container">
-    <div class="row">
+  <div class="row">
       <div class="col-lg-12">
-        <div class="page-content">
-            <!-- ***** Most Popular Start ***** -->
-          <div class="most-popular">
-            <div class="row">
-              <div class="col-lg-12">
-                <div class="heading-section">
-                  <h4><em>{{ liste.nom }}</em></h4>
-                </div>
-                <div class="row">
-                  {% for anime in animeInList %}
-                  <div class="col-lg-3 col-sm-6">
-                    <div class="item">
-                      <a href="{{ path('app_anime_details', {'id': anime.id }) }}">
-                        <img src="{{ anime.image }}" alt="">
-                      </a>
-                      <h4><a href="{{ path('app_anime_details', {'id': anime.id }) }}">{{ anime.nom }}</a><br><span>
-                        {% for categorie in anime.categorie %}<a href="{{ path('app_categorie_details', {'id': categorie.id }) }}">{{ categorie.nom }} </a>{% endfor %}
-                      </span></h4>
-                        <div class="d-flex justify-content-between">
-                          <span>Episodes :  {% if anime.episodes is not null %} {{ anime.episodes }}{% else %} - {% endif %}</span>
-                          <span>Year : {% if anime.year is not null %} {{ anime.year }}{% else %} - {% endif %}</span>       
-                        </div>
-                        <form action="{{ path('app_remove_anime_in_list', {'liste': liste.id, 'anime': anime.id}) }}" method="post">
-                          <input type="hidden" name="_method" value="DELETE">
-                        <div class="d-flex justify-content-end pt-3">
-                          
-                            <button class="btn btn-secondary " type="submit">Remove</button>
-                          
-                        </div>      
-                      </form>  
-                       
-                    </div>
+          <div class="page-content">
+              <!-- ***** Most Popular Start ***** -->
+              <div class="live-stream">
+                  <div class="col-lg-12">
+                      <div class="heading-section">
+                          <h4><em>{{ liste.nom }}</em>
+                          </h4>
+                      </div>
+                      <div class="row">
+                          {% if animeInList %}
+                              {% for anime in animeInList %}
+                                  <div class="col-lg-3 col-sm-6">
+                                      <div class="item">
+                                          <div class="thumb">
+                                              <a href="{{ path('app_anime_details', {'id': anime.id }) }}">
+                                                  <img src="{{ anime.image }}" alt="">
+                                              </a>
+                                              <div class="hover-effect">
+                                                  <div class="content">
+                                                      <ul>
+                                                          <li>
+                                                              <form action="{{ path('app_remove_anime_in_list', {'liste': liste.id, 'anime': anime.id}) }}" method="post">
+                                                                  <input type="hidden" name="_method" value="DELETE">
+                                                                  <div class="d-flex justify-content-end pt-3">
+                                                                      <button class="btn btn-secondary" type="submit">Remove</button>
+                                                                  </div>
+                                                              </form>
+                                                          </li>
+                                                      </ul>
+                                                  </div>
+                                              </div>
+                                          </div>
+                                          <div class="down-content d-flex justify-content-center align-items-center">
+                                              <a href="{{ path('app_anime_details', {'id': anime.id }) }}"> {{ anime.nom }}</a>
+                                          </div>
+                                      </div>
+                                  </div>
+                              {% endfor %}
+                          {% endif %}
+                      </div>
                   </div>
-                  {% endfor %}
-                </div>
               </div>
-            </div>
+              <!-- ***** Most Popular End ***** -->
           </div>
-          <!-- ***** Most Popular End ***** -->
-        </div>
       </div>
-    </div>
   </div>
+</div>

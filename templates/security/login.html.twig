@@ -5,24 +5,21 @@
 {% block body %}
 
     <div class="limiter">
-		<div class="container-login100" style="background-image: url('{{ asset('images/bg-01.jpg') }}');">
+		<div class="container-login100" style="background-color: #1f2122;">
 
 			<div class="wrap-login100 p-l-110 p-r-110 p-t-62 p-b-33">
 				<form class="login100-form validate-form flex-sb flex-w" method="post">
 					<span class="login100-form-title p-b-53">
 						Log in 
 					</span>
-					<span class="login100-form-title p-b-53">
+					
 						{% if error %}
-                        <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                        <span class="login100-form-title p-b-20">
+                        {{ error.messageKey|trans(error.messageData, 'security') }}
+                        </span>
                     	{% endif %}
 
-					</span>
-                    {% if app.user %}
-                        <div class="mb-3">
-                            You are logged in as {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Logout</a>
-                        </div>
-                    {% endif %}
+					
 					<div class="p-t-31 p-b-9">
 						<span class="txt1">
 							Email

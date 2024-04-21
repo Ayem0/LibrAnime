@@ -44,19 +44,19 @@ class MyListsController extends AbstractController
             $listsCount[$element->getId()] = count($animeInList);
         }
 
-        $form2 = $this->createForm(SearchFormType::class);
-        $form2->handleRequest($request);
-        if ($form2->isSubmitted() && $form2->isValid()) {
-            $data = strval($form2->get('search')->getData());
-            if ($form2->isSubmitted() && $form2->isValid()) {
-                $data = strval($form2->get('search')->getData());
-                return  $this->redirectToRoute('app_result_query', ['query' => $data . '&page=1&sfw=true']);
+        $searchForm = $this->createForm(SearchFormType::class);
+        $searchForm->handleRequest($request);
+        if ($searchForm->isSubmitted() && $searchForm->isValid()) {
+            $data = strval($searchForm->get('search')->getData());
+            if ($searchForm->isSubmitted() && $searchForm->isValid()) {
+                $data = strval($searchForm->get('search')->getData());
+                return  $this->redirectToRoute('app_result_query', ['query' => $data, 'page' => 1]);
             }
         }
         return $this->render('my_lists/index.html.twig', [
-            'listes'=> $listsArray,
+            'lists'=> $listsArray,
             'form'=>$form,
-            'searchForm' => $form2,
+            'searchForm' => $searchForm,
             'listsCount' => $listsCount
         ]);
     }
