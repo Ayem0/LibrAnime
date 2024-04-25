@@ -1278,7 +1278,6 @@ Featured Banner Style
 
 .feature-banner .thumb {
   position: relative;
-  max-height: 305px;
   overflow: hidden;
   border-radius: 23px;;
 }

@@ -53,6 +53,11 @@ class ResultController extends AbstractController
                     status
                     format
                     genres
+                    trailer {
+                        id
+                        site
+                        thumbnail
+                    }
                 }
             }
         }
@@ -103,14 +108,33 @@ class ResultController extends AbstractController
             $pages = $result['data']['Page']['pageInfo']['lastPage'];
             $currentPage = $result['data']['Page']['pageInfo']['currentPage'];
             $nbResult = $result['data']['Page']['pageInfo']['total'];
+
+            if ($nbResult === 5000) {
+                $newResponse = $http->post('https://graphql.anilist.co', [
+                    'json' => [
+                        'query' => $apiQuery,
+                        'variables' => [
+                            "search" => $query,
+                            "page" => 2,
+                            "perPage" => 50,
+                            "isAdult" => false,
+                            "excludedGenres" => ["Ecchi"],
+                            "mediaType" => "ANIME"
+                        ]
+                    ]
+                ]);
+                if ($newResponse->getStatusCode() === 200) {
+                    $newContent = $newResponse->getBody()->getContents();
+                    $newResult = json_decode($newContent, true);
+                    $pages = $newResult['data']['Page']['pageInfo']['lastPage'];
+                    $nbResult = $newResult['data']['Page']['pageInfo']['total'];
+                }
+            }
             
             foreach ($animeData as $anime) {
                 // RECUPERE L'ID DE LANIME ET VERIFIE SI DANS LA DB
                 
                 $title = $anime['title']['romaji'];
-
-             
-
                 $malId = $anime['id'];
                 $existingAnime = $entityManager->getRepository(Anime::class)->findOneBy(['mal_id' => $malId]);
                 if (!$existingAnime) {
@@ -121,10 +145,16 @@ class ResultController extends AbstractController
                     $startYear = $anime['startDate']['year'];
                     $endYear = $anime['endDate']['year'];
                     $episodes = $anime['episodes'];
-                    $genres = $anime['genres'];
-                    $format = $anime['format'];
+                    $genres = null;
+                    $format = null;
                     $status = $anime['status'];
-                   
+                    $trailer = $anime['trailer'];
+                    if ($anime['genres'] != null) {
+                        $genres = $anime['genres'];
+                    }
+                    if ($anime['format'] != null) {
+                        $format = $anime['format'];
+                    }
 
                     $newAnime = new Anime();
                     $newAnime->setNom($title);
@@ -134,19 +164,34 @@ class ResultController extends AbstractController
                     $newAnime->setYear($startYear);
                     $newAnime->setEpisodes($episodes);
                     
-                    
-                    for ($i = 0; $i < count($genres); $i++) {
-                        // Votre code ici
-                        $categorieName = $genres[$i];
-                        $existingCategorie = $entityManager->getRepository(Categorie::class)->findOneBy(['nom' => $categorieName]);
-                        if (!$existingCategorie) {
-                            $newCategorie = new Categorie();
-                            $newCategorie->setNom($categorieName);
-                            $entityManager->persist($newCategorie);
-                            $entityManager->flush();
-                            $newAnime->addCategorie($newCategorie);
+                    if ($trailer != null) {
+                        $trailerImg = $trailer['thumbnail'];
+                        $trailerSite = $trailer['site'];
+                        $trailerLink = $trailer['id'];
+                        $trailerUrl = '';
+                        if ($trailerSite === 'youtube') {
+                            $trailerUrl = 'https://www.youtube.com/watch?v=' . $trailerLink;
                         } else {
-                            $newAnime->addCategorie($existingCategorie);
+                            $trailerUrl = 'https://www.dailymotion.com/video/' . $trailerLink;
+                        }
+                        $newAnime->setTrailerImg($trailerImg);
+                        $newAnime->setTrailerUrl($trailerUrl);
+                    }
+                    
+                    if ( $genres != null) {
+                        for ($i = 0; $i < count($genres); $i++) {
+                            // Votre code ici
+                            $categorieName = $genres[$i];
+                            $existingCategorie = $entityManager->getRepository(Categorie::class)->findOneBy(['nom' => $categorieName]);
+                            if (!$existingCategorie) {
+                                $newCategorie = new Categorie();
+                                $newCategorie->setNom($categorieName);
+                                $entityManager->persist($newCategorie);
+                                $entityManager->flush();
+                                $newAnime->addCategorie($newCategorie);
+                            } else {
+                                $newAnime->addCategorie($existingCategorie);
+                            }
                         }
                     }
                     $entityManager->persist($newAnime);
@@ -168,7 +213,7 @@ class ResultController extends AbstractController
             }
         } else {
             // modifier ici pour faire la requete direct dans ma base de données
-            echo 'La requête API a échoué.';
+            echo 'requete echoue';
         }
         
         if (isset($form2)) {

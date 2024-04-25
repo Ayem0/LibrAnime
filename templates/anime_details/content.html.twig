@@ -8,6 +8,7 @@
             <div class="col-lg-12">
               <div class="feature-banner header-text">
                 <div class="row">
+                  {% if anime.trailerUrl is not null %}
                   <div class="col-lg-4">
                     <img src="{{ anime.image }}" alt="" style="border-radius: 23px;">
                   </div>
@@ -16,7 +17,14 @@
                       <img src="{{ anime.trailerImg }}" alt="" style="border-radius: 23px;">
                       <a href="{{ anime.trailerUrl }}" target="_blank"><i class="fa fa-play"></i></a>
                     </div>
+                   
                   </div>
+                  
+                  {% else %}
+                  <div class="col-lg-4">
+                    <img src="{{ anime.image }}" alt="" style="border-radius: 23px;">
+                  </div>
+                  {% endif %}
                 </div>
               </div>
             </div>
@@ -26,9 +34,11 @@
           <!-- ***** Details Start ***** -->
           <div class="game-details">
             <div class="row">
+              
               <div class="col-lg-12">
                 <h2>{{ anime.nom}}</h2>
               </div>
+              
               <div class="col-lg-12">
                 <div class="content">
                   <div class="row">
@@ -43,8 +53,8 @@
                           </span>
                         </div>
                         <ul>
-                          <li><i class="fa fa-star"></i> 4.8</li>
-                          <li><i class="fa fa-download"></i> 2.3M</li>
+                          <li><i class="fa fa-star"></i></li>
+                          <li><i class="fa fa-download"></i></li>
                         </ul>
                       </div>
                     </div>
@@ -95,59 +105,139 @@
           <!-- ***** Details End ***** -->
 
           <!-- ***** Other Start ***** -->
-          <div class="other-games">
-            <div class="row">
-              <div class="col-lg-12">
-                <div class="heading-section">
-                  <h4><em>Related</em> Animes</h4>
-                </div>
+
+          {% if relations is not empty %}
+          <div class="live-stream" style="margin-top: 60px">
+            <div class="col-lg-12">
+              <div class="heading-section">
+                <h4><em>Related</em> Animes</h4>
               </div>
-              {% for relation in relations %}
-              <div class="col-lg-6">
-                <div class="item">
-                  <a href="{{ path('app_anime_details', {'id': relation.id })}}">
-                    <img src="{{ relation.image }}" alt="" class="templatemo-item">
-                  </a>
-                  <h4><a href="{{ path('app_anime_details', {'id': relation.id })}}">{{ relation.nom }}</a></h4>
-                  <ul>
-                    <li><i class="fa fa-star"></i> 4.8</li>
-                    <li><i class="fa fa-download"></i> 2.3M</li>
-                  </ul>
-                  <span>Sandbox</span>
-                  
+                <div class="row">
+                    {% for relation in relations %}
+                            <div class="col-lg-3 col-sm-6">
+                                <div class="item">
+                                    <div class="thumb">
+                                        <a href="{{ path('app_anime_details', {'id': relation.id }) }}">
+                                            <img src="{{ relation.image }}" alt="">
+                                        </a>
+                                        <div class="hover-effect">
+                                            <div class="content">
+                                                <ul>
+                                                    <li>
+                                                      {% if app.user  %}<button class="btn btn-primary add-to-list" data-anime-id="{{ relation.id }}"><i class="fa fa-plus"></i> Add To List</button>{% else %}<div class="main-border-button"><a href="{{ path('app_login')}}">Add to List</a></div>{% endif %}
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="down-content d-flex justify-content-center align-items-center">
+                                        <a href="{{ path('app_anime_details', {'id': relation.id }) }}"> {{ relation.nom }}</a>
+                                    </div>
+                                </div>
+                                {% if app.user %}
+                        <div id="list-options-{{ relation.id }}" class="list-options" style="display: none;">
+                            <div class="dialog-container">
+                                <button class="closeButton add-to-list" data-anime-id="{{ relation.id }}"><img src="{{ asset('/images/cross.png') }}" alt=""></button>
+                                <div class="heading-section">
+                                    <h4>Save in...</h4>
+                                </div>
+                                <div class="overflow-auto">
+                                    {% for list in lists %}
+                                        <div class="main-border-button text-center" style="margin: 0;">
+                                            <a style="width: 100%;" href="{{ path('app_add_anime_in_list', {'liste': list.id, 'anime': relation.id}) }}" >
+                                                {{ list.nom }}
+                                                {% if relation in list.anime %}
+                                                    <i class="fa fa-check"></i>
+                                                {% endif %}
+                                            </a>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                                
+                                <button class="btn btn-primary create-list-button mt-2" data-anime-id="{{ relation.id }}"><i class="fa fa-plus"></i> Create list</button>
+                                <div id="create-list-form-{{ relation.id }}" style="display: none;" class="center"> 
+                                    {{ form_start(relationsForms[relation.id], {'attr': {'class': 'center'}}) }}
+                                      {{ form_widget(relationsForms[relation.id].nom) }}
+                                      {{ form_widget(relationsForms[relation.id].create) }}
+                                    {{ form_end(relationsForms[relation.id]) }}
+                                </div>
+                            </div>   
+                        </div> 
+                        {% endif %}
+                            </div>
+                        {% endfor %}
                 </div>
-              </div>
-              {% endfor %}
             </div>
-          </div>
+        </div>
+        {% endif %}
           <!-- ***** Other End ***** -->
           <!-- ***** Other Start ***** -->
-          <div class="other-games">
-            <div class="row">
-              <div class="col-lg-12">
-                <div class="heading-section">
-                  <h4><em>Recommended</em> Animes</h4>
-                </div>
+    
+
+          {% if recommendations is not empty %}
+          <div class="live-stream" style="margin-top: 60px">
+            <div class="col-lg-12">
+              <div class="heading-section">
+                <h4><em>Recommended</em> Animes</h4>
               </div>
-              {% for recommendation in recommendations %}
-              <div class="col-lg-6">
-                <div class="item">
-                  
-                  <a href="{{ path('app_anime_details', {'id': recommendation.id })}}">
-                    <img src="{{ recommendation.image }}" alt="" class="templatemo-item">
-                  </a>
-                  <h4><a href="{{ path('app_anime_details', {'id': recommendation.id })}}">{{ recommendation.nom }}</a></h4>
-                  <ul>
-                    <li><i class="fa fa-star"></i> 4.8</li>
-                    <li><i class="fa fa-download"></i> 2.3M</li>
-                  </ul>
-                  <span>Sandbox</span>
-                  
+                <div class="row">
+                    {% for recommendation in recommendations %}
+                            <div class="col-lg-3 col-sm-6">
+                                <div class="item">
+                                    <div class="thumb">
+                                        <a href="{{ path('app_anime_details', {'id': recommendation.id }) }}">
+                                            <img src="{{ recommendation.image }}" alt="">
+                                        </a>
+                                        <div class="hover-effect">
+                                            <div class="content">
+                                                <ul>
+                                                    <li>
+                                                      {% if app.user  %}<button class="btn btn-primary add-to-list" data-anime-id="{{ recommendation.id }}"><i class="fa fa-plus"></i> Add To List</button>{% else %}<div class="main-border-button"><a href="{{ path('app_login')}}">Add to List</a></div>{% endif %}
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="down-content d-flex justify-content-center align-items-center">
+                                        <a href="{{ path('app_anime_details', {'id': recommendation.id }) }}"> {{ recommendation.nom }}</a>
+                                    </div>
+                                </div>
+                                {% if app.user %}
+                        <div id="list-options-{{ recommendation.id }}" class="list-options" style="display: none;">
+                            <div class="dialog-container">
+                                <button class="closeButton add-to-list" data-anime-id="{{ recommendation.id }}"><img src="{{ asset('/images/cross.png') }}" alt=""></button>
+                                <div class="heading-section">
+                                    <h4>Save in...</h4>
+                                </div>
+                                <div class="overflow-auto">
+                                    {% for list in lists %}
+                                        <div class="main-border-button text-center" style="margin: 0;">
+                                            <a style="width: 100%;" href="{{ path('app_add_anime_in_list', {'liste': list.id, 'anime': recommendation.id}) }}" >
+                                                {{ list.nom }}
+                                                {% if recommendation in list.anime %}
+                                                    <i class="fa fa-check"></i>
+                                                {% endif %}
+                                            </a>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                                
+                                <button class="btn btn-primary create-list-button mt-2" data-anime-id="{{ recommendation.id }}"><i class="fa fa-plus"></i> Create list</button>
+                                <div id="create-list-form-{{ recommendation.id }}" style="display: none;" class="center"> 
+                                    {{ form_start(recommendationsForms[recommendation.id], {'attr': {'class': 'center'}}) }}
+                                      {{ form_widget(recommendationsForms[recommendation.id].nom) }}
+                                      {{ form_widget(recommendationsForms[recommendation.id].create) }}
+                                    {{ form_end(recommendationsForms[recommendation.id]) }}
+                                </div>
+                            </div>   
+                        </div> 
+                        {% endif %}
+                            </div>
+                        {% endfor %}
                 </div>
-              </div>
-              {% endfor %}
             </div>
-          </div>
+        </div>
+        {% endif %}
           <!-- ***** Other End ***** -->
         </div>
       </div>

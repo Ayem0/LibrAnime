@@ -26,6 +26,7 @@ class AnimeDetailsController extends AbstractController
         $apiQuery = '
         query ($id: Int, $perPage: Int, $sort: [RecommendationSort]) {
             Media (id: $id) {
+                format
                 recommendations (perPage: $perPage, sort: $sort) {
                     nodes {
                         mediaRecommendation  {
@@ -49,6 +50,11 @@ class AnimeDetailsController extends AbstractController
                             status
                             format
                             genres
+                            trailer {
+                                id
+                                site
+                                thumbnail
+                            }
                         }
                     }
                 }
@@ -72,6 +78,11 @@ class AnimeDetailsController extends AbstractController
                         status
                         format
                         genres
+                        trailer {
+                            id
+                            site
+                            thumbnail
+                        }
                     }
                 }
             }
@@ -79,7 +90,7 @@ class AnimeDetailsController extends AbstractController
         ';
         $variables = [
             "id" => $malId,
-            "perPage" => 10,
+            "perPage" => 25,
             "sort" => ["RATING_DESC"],
         ];
         $http = new Client();
@@ -93,6 +104,7 @@ class AnimeDetailsController extends AbstractController
         $recommendationsArray = [];
         $relationsArray = [];
 
+
         if ($response->getStatusCode() === 200) {
             $content = $response->getBody()->getContents();
             $result = json_decode($content, true);
@@ -104,20 +116,26 @@ class AnimeDetailsController extends AbstractController
             foreach ($recommendations as $animeSelected) {
                 // RECUPERE L'ID DE LANIME ET VERIFIE SI DANS LA DB
                 $selected = $animeSelected['mediaRecommendation'];
-                $genres = $selected['genres'];
-                $format = $selected['format'];
+                
+                
                 $badGenres = ['Hentai', 'Ecchi'];
-                $badFormats = ['MUSIC', 'MANGA', 'NOVEL', 'ONE_SHOT'];
+                $badFormats = ['MANGA', 'NOVEL', 'ONE_SHOT'];
 
                 $isValid = true;
-                foreach ($genres as $genre) {
-                    if (in_array($genre, $badGenres)) {
-                        $isValid = false;
-                        break;
+                if ($selected['genres'] != null) {
+                    $genres = $selected['genres'];
+                    foreach ($genres as $genre) {
+                        if (in_array($genre, $badGenres)) {
+                            $isValid = false;
+                            break;
+                        }
                     }
                 }
-                if (in_array($format, $badFormats)) {
-                    $isValid = false;
+                if ($selected['format'] != null) {
+                    $format = $selected['format'];
+                    if (in_array($format, $badFormats)) {
+                        $isValid = false;
+                    }
                 }
 
                 if ($isValid === true) {
@@ -133,6 +151,7 @@ class AnimeDetailsController extends AbstractController
                         $endYear = $selected['endDate']['year'];
                         $episodes = $selected['episodes'];
                         $status = $selected['status'];
+                        $trailer = $selected['trailer'];
 
                         $newAnime = new Anime();
                         $newAnime->setNom($title);
@@ -141,6 +160,20 @@ class AnimeDetailsController extends AbstractController
                         $newAnime->setSynopsis($synopsis);
                         $newAnime->setYear($startYear);
                         $newAnime->setEpisodes($episodes);
+
+                        if ($trailer != null) {
+                            $trailerImg = $trailer['thumbnail'];
+                            $trailerSite = $trailer['site'];
+                            $trailerLink = $trailer['id'];
+                            $trailerUrl = '';
+                            if ($trailerSite === 'youtube') {
+                                $trailerUrl = 'https://www.youtube.com/watch?v=' . $trailerLink;
+                            } else {
+                                $trailerUrl = 'https://www.dailymotion.com/video/' . $trailerLink;
+                            }
+                            $newAnime->setTrailerImg($trailerImg);
+                            $newAnime->setTrailerUrl($trailerUrl);
+                        }
                         $entityManager->persist($newAnime);
                         $entityManager->flush();
 
@@ -172,7 +205,7 @@ class AnimeDetailsController extends AbstractController
                 $genres = $relation['genres'];
                 $format = $relation['format'];
                 $badGenres = ['Hentai', 'Ecchi'];
-                $badFormats = ['MUSIC', 'MANGA', 'NOVEL', 'ONE_SHOT'];
+                $badFormats = ['MANGA', 'NOVEL', 'ONE_SHOT'];
 
                 $isValid = true;
                 foreach ($genres as $genre) {
@@ -198,6 +231,7 @@ class AnimeDetailsController extends AbstractController
                         $endYear = $relation['endDate']['year'];
                         $episodes = $relation['episodes'];
                         $status = $relation['status'];
+                        $trailer = $relation['trailer'];
 
                         $newAnime = new Anime();
                         $newAnime->setNom($title);
@@ -206,6 +240,20 @@ class AnimeDetailsController extends AbstractController
                         $newAnime->setSynopsis($synopsis);
                         $newAnime->setYear($startYear);
                         $newAnime->setEpisodes($episodes);
+
+                        if ($trailer != null) {
+                            $trailerImg = $trailer['thumbnail'];
+                            $trailerSite = $trailer['site'];
+                            $trailerLink = $trailer['id'];
+                            $trailerUrl = '';
+                            if ($trailerSite === 'youtube') {
+                                $trailerUrl = 'https://www.youtube.com/watch?v=' . $trailerLink;
+                            } else {
+                                $trailerUrl = 'https://www.dailymotion.com/video/' . $trailerLink;
+                            }
+                            $newAnime->setTrailerImg($trailerImg);
+                            $newAnime->setTrailerUrl($trailerUrl);
+                        }
                         $entityManager->persist($newAnime);
                         $entityManager->flush();
 
@@ -231,6 +279,22 @@ class AnimeDetailsController extends AbstractController
                     }
                 }
             }
+        }
+
+        $recommendationsForms = [];
+        $relationsForms = [];
+        foreach($recommendationsArray as $element) {
+            $list = new Liste();
+            $form2 = $this->createForm(CreateListFormType::class, $list);
+            $form2View = $form2->createView();
+            $recommendationsForms[$element->getId()] = $form2View;
+        }
+
+        foreach($relationsArray as $element) {
+            $list = new Liste();
+            $form2 = $this->createForm(CreateListFormType::class, $list);
+            $form2View = $form2->createView();
+            $relationsForms[$element->getId()] = $form2View;
         }
 
         $categories = $anime->getCategorie();
@@ -268,6 +332,7 @@ class AnimeDetailsController extends AbstractController
                 return  $this->redirectToRoute('app_result_query', ['query' => $data, 'page' => 1]);
             }
         }
+
         return $this->render('anime_details/index.html.twig', [
             'anime' => $anime,
             'categories'=> $categories,
@@ -275,7 +340,9 @@ class AnimeDetailsController extends AbstractController
             'listForm' => $listForm->createView(),
             'lists' => $listsArray,
             'relations' => $relationsArray,
-            'recommendations' => $recommendationsArray
+            'recommendations' => $recommendationsArray,
+            'relationsForms' => $relationsForms,
+            'recommendationsForms' => $recommendationsForms,
         ]);
     }
 }
