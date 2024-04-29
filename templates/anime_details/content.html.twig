@@ -73,7 +73,7 @@
                       <p>{{ anime.synopsis }}</p>
                     </div>
                     <div class="col-lg-12">
-                      {% if app.user  %}<div class="main-border-button"><button style="width: 100%;" class="btn btn-primary add-to-list" data-anime-id="{{ anime.id }}"><i class="fa fa-plus"></i> Add To List</button></div>{% else %}<div class="main-border-button"><a href="{{ path('app_login')}}">Add To List</a></div>{% endif %}
+                      {% if app.user  %}<div class="main-button mt-4"><button style="width: 100%;" class="add-to-list" data-anime-id="{{ anime.id }}"><i class="fa fa-plus"></i> Add To List</button></div>{% else %}<div class="main-border-button"><a href="{{ path('app_login')}}">Add To List</a></div>{% endif %}
                         {% if app.user %}
                         <div id="list-options-{{ anime.id }}" class="list-options" style="display: none;">
                             <div class="dialog-container">
@@ -114,61 +114,65 @@
               </div>
                 <div class="row">
                     {% for relation in relations %}
-                            <div class="col-lg-3 col-sm-6">
-                                <div class="item">
-                                    <div class="thumb">
-                                        <a href="{{ path('app_anime_details', {'id': relation.id }) }}">
-                                            <img src="{{ relation.image }}" alt="" class="img-anime">
-                                        </a>
-                                        <div class="hover-effect">
-                                            <div class="content">
-                                                <ul>
-                                                    <li>
-                                                      {% if app.user  %}<button class="btn btn-primary add-to-list" data-anime-id="{{ relation.id }}"><i class="fa fa-plus"></i> Add To List</button>{% else %}<div class="main-border-button"><a href="{{ path('app_login')}}">Add to List</a></div>{% endif %}
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="down-content d-flex justify-content-center align-items-center">
-                                        <a href="{{ path('app_anime_details', {'id': relation.id }) }}"> {{ relation.nom }}</a>
-                                    </div>
-                                </div>
-                                {% if app.user %}
-                        <div id="list-options-{{ relation.id }}" class="list-options" style="display: none;">
-                            <div class="dialog-container">
-                                <button class="closeButton add-to-list" data-anime-id="{{ relation.id }}"><img src="{{ asset('/images/cross.png') }}" alt=""></button>
-                                <div class="heading-section">
-                                    <h4>Save in...</h4>
-                                </div>
-                                <div class="overflow-auto">
-                                    {% for list in lists %}
-                                        <div class="main-border-button text-center" style="margin: 0;">
-                                            <a style="width: 100%;" href="{{ path('app_add_anime_in_list', {'liste': list.id, 'anime': relation.id}) }}" >
-                                                {{ list.nom }}
-                                                {% if relation in list.anime %}
-                                                    <i class="fa fa-check"></i>
-                                                {% endif %}
-                                            </a>
-                                        </div>
-                                    {% endfor %}
-                                </div>
-                                
-                                <button class="btn btn-primary create-list-button mt-2" data-anime-id="{{ relation.id }}"><i class="fa fa-plus"></i> Create list</button>
-                                <div id="create-list-form-{{ relation.id }}" style="display: none;" class="center"> 
-                                    {{ form_start(relationsForms[relation.id], {'attr': {'class': 'center'}}) }}
-                                      {{ form_widget(relationsForms[relation.id].nom) }}
-                                      {{ form_widget(relationsForms[relation.id].create) }}
-                                    {{ form_end(relationsForms[relation.id]) }}
-                                </div>
-                            </div>   
-                        </div> 
-                        {% endif %}
-                            </div>
-                        {% endfor %}
+                      <div class="col-lg-3 col-sm-6">
+                          <div class="item">
+                              <div class="thumb">
+                                  <a href="{{ path('app_anime_details', {'id': relation.id }) }}">
+                                      <img src="{{ relation.image }}" alt="" class="img-anime">
+                                  </a>
+                                  <div class="hover-effect">
+                                      <div class="content">
+                                          <ul>
+                                              <li>
+                                                {% if app.user  %} <div class="main-button"><button class="add-to-list" data-anime-id="{{ relation.id }}"><i class="fa fa-plus"></i> Add To List</button></div>{% else %}<div class="main-border-button"><a href="{{ path('app_login')}}">Add to List</a></div>{% endif %}
+                                              </li>
+                                          </ul>
+                                      </div>
+                                  </div>
+                              </div>
+                              <div class="down-content d-flex justify-content-center align-items-center">
+                                  <a href="{{ path('app_anime_details', {'id': relation.id }) }}"> {{ relation.nom }}</a>
+                              </div>
+                          </div>      
+                      </div>
+                    {% endfor %}
                 </div>
             </div>
         </div>
+        {% endif %}
+        {% if relations is not empty and app.user %}
+        {% for relation in relations %}
+          <div id="list-options-{{ relation.id }}" class="list-options" style="display: none;">
+              <div class="dialog-container">
+                  <button class="closeButton add-to-list" data-anime-id="{{ relation.id }}"><img src="{{ asset('/images/cross.png') }}" alt=""></button>
+                  <div class="heading-section">
+                      <h4>Save in...</h4>
+                  </div>
+                  <div class="overflow-auto">
+                      {% for list in lists %}
+                          <div class="main-border-button text-center" style="margin: 0;">
+                              <a style="width: 100%;" href="{{ path('app_add_anime_in_list', {'liste': list.id, 'anime': relation.id}) }}" >
+                                  {{ list.nom }}
+                                  {% if relation in list.anime %}
+                                      <i class="fa fa-check"></i>
+                                  {% endif %}
+                              </a>
+                          </div>
+                      {% endfor %}
+                  </div>
+                  
+                  <div class="main-button">
+                    <button class="create-list-button mt-2" data-anime-id="{{ relation.id }}"><i class="fa fa-plus"></i> Create list</button>
+                  </div>
+                  <div id="create-list-form-{{ relation.id }}" style="display: none;" class="center"> 
+                      {{ form_start(relationsForms[relation.id], {'attr': {'class': 'center'}}) }}
+                        {{ form_widget(relationsForms[relation.id].nom) }}
+                        {{ form_widget(relationsForms[relation.id].create) }}
+                      {{ form_end(relationsForms[relation.id]) }}
+                  </div>
+              </div>   
+          </div> 
+        {% endfor %}
         {% endif %}
           <!-- ***** Other End ***** -->
           <!-- ***** Other Start ***** -->
@@ -192,7 +196,7 @@
                                             <div class="content">
                                                 <ul>
                                                     <li>
-                                                      {% if app.user  %}<button class="btn btn-primary add-to-list" data-anime-id="{{ recommendation.id }}"><i class="fa fa-plus"></i> Add To List</button>{% else %}<div class="main-border-button"><a href="{{ path('app_login')}}">Add to List</a></div>{% endif %}
+                                                      {% if app.user  %}<div class="main-button"><button class="btn btn-primary add-to-list" data-anime-id="{{ recommendation.id }}"><i class="fa fa-plus"></i> Add To List</button></div>{% else %}<div class="main-border-button"><a href="{{ path('app_login')}}">Add to List</a></div>{% endif %}
                                                     </li>
                                                 </ul>
                                             </div>
@@ -202,41 +206,46 @@
                                         <a href="{{ path('app_anime_details', {'id': recommendation.id }) }}"> {{ recommendation.nom }}</a>
                                     </div>
                                 </div>
-                                {% if app.user %}
-                        <div id="list-options-{{ recommendation.id }}" class="list-options" style="display: none;">
-                            <div class="dialog-container">
-                                <button class="closeButton add-to-list" data-anime-id="{{ recommendation.id }}"><img src="{{ asset('/images/cross.png') }}" alt=""></button>
-                                <div class="heading-section">
-                                    <h4>Save in...</h4>
-                                </div>
-                                <div class="overflow-auto">
-                                    {% for list in lists %}
-                                        <div class="main-border-button text-center" style="margin: 0;">
-                                            <a style="width: 100%;" href="{{ path('app_add_anime_in_list', {'liste': list.id, 'anime': recommendation.id}) }}" >
-                                                {{ list.nom }}
-                                                {% if recommendation in list.anime %}
-                                                    <i class="fa fa-check"></i>
-                                                {% endif %}
-                                            </a>
-                                        </div>
-                                    {% endfor %}
-                                </div>
                                 
-                                <button class="btn btn-primary create-list-button mt-2" data-anime-id="{{ recommendation.id }}"><i class="fa fa-plus"></i> Create list</button>
-                                <div id="create-list-form-{{ recommendation.id }}" style="display: none;" class="center"> 
-                                    {{ form_start(recommendationsForms[recommendation.id], {'attr': {'class': 'center'}}) }}
-                                      {{ form_widget(recommendationsForms[recommendation.id].nom) }}
-                                      {{ form_widget(recommendationsForms[recommendation.id].create) }}
-                                    {{ form_end(recommendationsForms[recommendation.id]) }}
-                                </div>
-                            </div>   
-                        </div> 
-                        {% endif %}
                             </div>
                         {% endfor %}
                 </div>
             </div>
         </div>
+        {% endif %}
+        {% if recommendations is not empty and app.user %}
+        {% for recommendation in recommendations %}
+        <div id="list-options-{{ recommendation.id }}" class="list-options" style="display: none;">
+            <div class="dialog-container">
+                <button class="closeButton add-to-list" data-anime-id="{{ recommendation.id }}"><img src="{{ asset('/images/cross.png') }}" alt=""></button>
+                <div class="heading-section">
+                    <h4>Save in...</h4>
+                </div>
+                <div class="overflow-auto">
+                    {% for list in lists %}
+                        <div class="main-border-button text-center" style="margin: 0;">
+                            <a style="width: 100%;" href="{{ path('app_add_anime_in_list', {'liste': list.id, 'anime': recommendation.id}) }}" >
+                                {{ list.nom }}
+                                {% if recommendation in list.anime %}
+                                    <i class="fa fa-check"></i>
+                                {% endif %}
+                            </a>
+                        </div>
+                    {% endfor %}
+                </div>
+                
+                <div class="main-button">
+                  <button class="create-list-button mt-2" data-anime-id="{{ recommendation.id }}"><i class="fa fa-plus"></i> Create list</button>
+                </div>
+                <div id="create-list-form-{{ recommendation.id }}" style="display: none;" class="center"> 
+                    {{ form_start(recommendationsForms[recommendation.id], {'attr': {'class': 'center'}}) }}
+                      {{ form_widget(recommendationsForms[recommendation.id].nom) }}
+                      {{ form_widget(recommendationsForms[recommendation.id].create) }}
+                    {{ form_end(recommendationsForms[recommendation.id]) }}
+                </div>
+            </div>   
+        </div> 
+        {% endfor %}
         {% endif %}
           <!-- ***** Other End ***** -->
         </div>

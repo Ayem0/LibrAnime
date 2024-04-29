@@ -108,6 +108,7 @@ class AnimeDetailsController extends AbstractController
         if ($response->getStatusCode() === 200) {
             $content = $response->getBody()->getContents();
             $result = json_decode($content, true);
+            
             $recommendations = $result['data']['Media']['recommendations']['nodes'];
             $relations = $result['data']['Media']['relations']['nodes'];
             //var_dump($recommendations);
@@ -116,14 +117,95 @@ class AnimeDetailsController extends AbstractController
             foreach ($recommendations as $animeSelected) {
                 // RECUPERE L'ID DE LANIME ET VERIFIE SI DANS LA DB
                 $selected = $animeSelected['mediaRecommendation'];
-                
-                
+                if ($selected != null) {
+                    $badGenres = ['Hentai', 'Ecchi'];
+                    $badFormats = ['MANGA', 'NOVEL', 'ONE_SHOT'];
+
+                    $isValid = true;
+                    if (isset($selected['genres'])) {
+                        $genres = $selected['genres'];
+                        foreach ($genres as $genre) {
+                            if (in_array($genre, $badGenres)) {
+                                $isValid = false;
+                                break;
+                            }
+                        }
+                    }
+                    if (isset($selected['format'])) {
+                        $format = $selected['format'];
+                        if (in_array($format, $badFormats)) {
+                            $isValid = false;
+                        }
+                    }
+
+                    if ($isValid === true) {
+                        $malId = $selected['id'];
+                        $existingAnime = $entityManager->getRepository(Anime::class)->findOneBy(['mal_id' => $malId]);
+                        if (!$existingAnime) {
+                            // SI PAS DANS DB
+                            $title = $selected['title']['romaji'];
+                            $image = $selected['coverImage']['large'];
+                            $synopsis = $selected['description'];
+                            $startYear = $selected['startDate']['year'];
+                            $endYear = $selected['endDate']['year'];
+                            $episodes = $selected['episodes'];
+                            $status = $selected['status'];
+                            $trailer = $selected['trailer'];
+
+                            $newAnime = new Anime();
+                            $newAnime->setNom($title);
+                            $newAnime->setImage($image);
+                            $newAnime->setMalId($malId);
+                            $newAnime->setSynopsis($synopsis);
+                            $newAnime->setYear($startYear);
+                            $newAnime->setEpisodes($episodes);
+
+                            if ($trailer != null) {
+                                $trailerImg = $trailer['thumbnail'];
+                                $trailerSite = $trailer['site'];
+                                $trailerLink = $trailer['id'];
+                                $trailerUrl = '';
+                                if ($trailerSite === 'youtube') {
+                                    $trailerUrl = 'https://www.youtube.com/watch?v=' . $trailerLink;
+                                } else {
+                                    $trailerUrl = 'https://www.dailymotion.com/video/' . $trailerLink;
+                                }
+                                $newAnime->setTrailerImg($trailerImg);
+                                $newAnime->setTrailerUrl($trailerUrl);
+                            }
+                            $entityManager->persist($newAnime);
+                            $entityManager->flush();
+
+                            for ($i = 0; $i < count($genres); $i++) {
+                                // Votre code ici
+                                $categorieName = $genres[$i];
+                                $existingCategorie = $entityManager->getRepository(Categorie::class)->findOneBy(['nom' => $categorieName]);
+                                if (!$existingCategorie) {
+                                    $newCategorie = new Categorie();
+                                    $newCategorie->setNom($categorieName);
+                                    $entityManager->persist($newCategorie);
+                                    $entityManager->flush();
+                                    $newAnime->addCategorie($newCategorie);
+                                } else {
+                                    $newAnime->addCategorie($existingCategorie);
+                                }
+                            }
+                            $recommendationsArray[] = $newAnime;
+                        } else {
+                            $recommendationsArray[] = $existingAnime;
+                        }
+                    }              
+                }
+            }
+
+            foreach ($relations as $relation) {
+                // RECUPERE L'ID DE LANIME ET VERIFIE SI DANS LA DB
                 $badGenres = ['Hentai', 'Ecchi'];
                 $badFormats = ['MANGA', 'NOVEL', 'ONE_SHOT'];
 
                 $isValid = true;
-                if ($selected['genres'] != null) {
-                    $genres = $selected['genres'];
+                if (isset($relation['genres'])) {
+                    $genres = $relation['genres'];
                     foreach ($genres as $genre) {
                         if (in_array($genre, $badGenres)) {
                             $isValid = false;
@@ -131,91 +213,11 @@ class AnimeDetailsController extends AbstractController
                         }
                     }
                 }
-                if ($selected['format'] != null) {
-                    $format = $selected['format'];
+                if (isset($relation['format'])) {
+                    $format = $relation['format'];
                     if (in_array($format, $badFormats)) {
                         $isValid = false;
                     }
-                }
-
-                if ($isValid === true) {
-
-                    $malId = $selected['id'];
-                    $existingAnime = $entityManager->getRepository(Anime::class)->findOneBy(['mal_id' => $malId]);
-                    if (!$existingAnime) {
-                        // SI PAS DANS DB
-                        $title = $selected['title']['romaji'];
-                        $image = $selected['coverImage']['large'];
-                        $synopsis = $selected['description'];
-                        $startYear = $selected['startDate']['year'];
-                        $endYear = $selected['endDate']['year'];
-                        $episodes = $selected['episodes'];
-                        $status = $selected['status'];
-                        $trailer = $selected['trailer'];
-
-                        $newAnime = new Anime();
-                        $newAnime->setNom($title);
-                        $newAnime->setImage($image);
-                        $newAnime->setMalId($malId);
-                        $newAnime->setSynopsis($synopsis);
-                        $newAnime->setYear($startYear);
-                        $newAnime->setEpisodes($episodes);
-
-                        if ($trailer != null) {
-                            $trailerImg = $trailer['thumbnail'];
-                            $trailerSite = $trailer['site'];
-                            $trailerLink = $trailer['id'];
-                            $trailerUrl = '';
-                            if ($trailerSite === 'youtube') {
-                                $trailerUrl = 'https://www.youtube.com/watch?v=' . $trailerLink;
-                            } else {
-                                $trailerUrl = 'https://www.dailymotion.com/video/' . $trailerLink;
-                            }
-                            $newAnime->setTrailerImg($trailerImg);
-                            $newAnime->setTrailerUrl($trailerUrl);
-                        }
-                        $entityManager->persist($newAnime);
-                        $entityManager->flush();
-
-                        for ($i = 0; $i < count($genres); $i++) {
-                            // Votre code ici
-                            $categorieName = $genres[$i];
-                            $existingCategorie = $entityManager->getRepository(Categorie::class)->findOneBy(['nom' => $categorieName]);
-                            if (!$existingCategorie) {
-                                $newCategorie = new Categorie();
-                                $newCategorie->setNom($categorieName);
-                                $entityManager->persist($newCategorie);
-                                $entityManager->flush();
-                                $newAnime->addCategorie($newCategorie);
-                            } else {
-                                $newAnime->addCategorie($existingCategorie);
-                            }
-                        }
-
-
-                        $recommendationsArray[] = $newAnime;
-                    } else {
-                        $recommendationsArray[] = $existingAnime;
-                    }
-                }
-            }
-
-            foreach ($relations as $relation) {
-                // RECUPERE L'ID DE LANIME ET VERIFIE SI DANS LA DB
-                $genres = $relation['genres'];
-                $format = $relation['format'];
-                $badGenres = ['Hentai', 'Ecchi'];
-                $badFormats = ['MANGA', 'NOVEL', 'ONE_SHOT'];
-
-                $isValid = true;
-                foreach ($genres as $genre) {
-                    if (in_array($genre, $badGenres)) {
-                        $isValid = false;
-                        break;
-                    }
-                }
-                if (in_array($format, $badFormats)) {
-                    $isValid = false;
                 }
 
                 if ($isValid === true) {

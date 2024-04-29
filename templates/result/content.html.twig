@@ -21,7 +21,7 @@
                                       <div class="hover-effect">
                                         <div class="content">
                                           <ul>
-                                            <li>{% if app.user  %}<button class="btn btn-primary add-to-list" data-anime-id="{{ anime.id }}"><i class="fa fa-plus"></i> Add To List</button>{% else %}<div class="main-border-button"><a href="{{ path('app_login')}}">Add to List</a></div>{% endif %}</li>
+                                            <li>{% if app.user  %}<div class="main-button"><button class="btn btn-primary add-to-list" data-anime-id="{{ anime.id }}"><i class="fa fa-plus"></i> Add To List</button></div> {% else %}<div class="main-border-button"><a href="{{ path('app_login')}}">Add to List</a></div>{% endif %}</li>
                                           </ul>
                                         </div>
                                       </div>
@@ -33,36 +33,7 @@
                                     </div> 
                                 </div>
                                 
-                                {% if app.user %}
-                                <div id="list-options-{{ anime.id }}" class="list-options" style="display: none;">
-                                    <div class="dialog-container">
-                                        <button class="closeButton add-to-list" data-anime-id="{{ anime.id }}"><img src="{{ asset('/images/cross.png') }}" alt=""></button>
-                                        <div class="heading-section">
-                                            <h4>Save in...</h4>
-                                        </div>
-                                        <div class="overflow-auto">
-                                            {% for list in lists %}
-                                                <div class="main-border-button text-center" style="margin: 0;">
-                                                    <a style="width: 100%;" href="{{ path('app_add_anime_in_list', {'liste': list.id, 'anime': anime.id}) }}" >
-                                                        {{ list.nom }}
-                                                        {% if anime in list.anime %}
-                                                            <i class="fa fa-check"></i>
-                                                        {% endif %}
-                                                    </a>
-                                                </div>
-                                            {% endfor %}
-                                        </div>
-                                        
-                                        <button class="btn btn-primary create-list-button mt-2" data-anime-id="{{ anime.id }}"><i class="fa fa-plus"></i> Create list</button>
-                                        <div id="create-list-form-{{ anime.id }}" style="display: none;" class="center"> 
-                                            {{ form_start(form2[anime.id], {'attr': {'class': 'center'}}) }}
-                                                {{ form_widget(form2[anime.id].nom) }}
-                                                {{ form_widget(form2[anime.id].create) }}
-                                            {{ form_end(form2[anime.id]) }}
-                                        </div>
-                                    </div>   
-                                </div> 
-                                {% endif %}
+                                
                             </div>
                             {% endfor %}
                         </div>
@@ -84,3 +55,36 @@
         </div>
     </div>
 </div>
+{% if app.user %}
+{% for anime in animes %}
+<div id="list-options-{{ anime.id }}" class="list-options" style="display: none;">
+    <div class="dialog-container">
+        <button class="closeButton add-to-list" data-anime-id="{{ anime.id }}"><img src="{{ asset('/images/cross.png') }}" alt=""></button>
+        <div class="heading-section">
+            <h4>Save in...</h4>
+        </div>
+        <div class="overflow-auto">
+            {% for list in lists %}
+                <div class="main-border-button text-center" style="margin: 0;">
+                    <a style="width: 100%;" href="{{ path('app_add_anime_in_list', {'liste': list.id, 'anime': anime.id}) }}" >
+                        {{ list.nom }}
+                        {% if anime in list.anime %}
+                            <i class="fa fa-check"></i>
+                        {% endif %}
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="main-button">
+            <button class="create-list-button mt-2" data-anime-id="{{ anime.id }}"><i class="fa fa-plus"></i> Create list</button>
+        </div>
+        <div id="create-list-form-{{ anime.id }}" style="display: none;" class="center"> 
+            {{ form_start(form2[anime.id], {'attr': {'class': 'center'}}) }}
+                {{ form_widget(form2[anime.id].nom) }}
+                {{ form_widget(form2[anime.id].create) }}
+            {{ form_end(form2[anime.id]) }}
+        </div>
+    </div>   
+</div>
+{% endfor %}
+{% endif %}

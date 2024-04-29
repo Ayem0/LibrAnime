@@ -975,7 +975,7 @@ Featured Games Style
 
 .featured-games .item .thumb .hover-effect {
   position: absolute;
-  bottom: -100px;
+  top: 300px;
   text-align: center;
   width: 100%;
   opacity: 0;
@@ -1682,6 +1682,7 @@ Profile Style
   padding: 0;
   z-index: 5;
   position: fixed;
+  display: flex;
   justify-content: center;
   align-items: center;
   top: 50%;
@@ -1720,6 +1721,27 @@ Profile Style
   height: 370px;
 }
 
+
+.main-button button {
+  font-size: 14px;
+  color: #fff;
+  background-color: #e75e8d;
+  padding: 12px 30px;
+  display: inline-block;
+  border-radius: 25px;
+  font-weight: 400;
+  text-transform: capitalize;
+  letter-spacing: 0.5px;
+  transition: all .3s;
+  position: relative;
+  overflow: hidden;
+  border: none;
+}
+
+.main-button button:hover {
+  background-color: #fff;
+  color: #e75e8d;
+}
 /* 
 ---------------------------------------------
 Responsive Style
