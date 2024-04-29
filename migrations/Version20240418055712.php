@@ -24,8 +24,8 @@ final class Version20240418051609 extends AbstractMigration
         $this->addSql('ALTER TABLE anime ADD trailer_img VARCHAR(255) DEFAULT NULL');
         $this->addSql('ALTER TABLE anime ADD year INT DEFAULT NULL');
         $this->addSql('ALTER TABLE anime ADD episodes INT DEFAULT NULL');
-        $this->addSql('ALTER TABLE anime ADD synopsis TEXT NOT NULL');
-        $this->addSql('ALTER TABLE anime ALTER mal_id SET NOT NULL');
+        $this->addSql('ALTER TABLE anime ADD synopsis TEXT DEFAULT NULL');
+        $this->addSql('ALTER TABLE anime ALTER mal_id SET DEFAULT NULL');
     }
 
     public function down(Schema $schema): void

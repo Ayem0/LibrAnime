@@ -30,88 +30,183 @@
 				<!-- ***** Featured Games Start ***** -->
 				<div class="row margin-top">
 					<div class="col-lg-8">
-					  <div class="featured-games header-text">
-						<div class="heading-section">
-						  <h4><em>Newest</em> Animes</h4>
-						</div>
-						<div class="owl-features owl-carousel">
-							{% for i in 0..7%}
-						  <div class="item">
-							<div class="thumb">
-							  <img src="{{ asset('images/featured-01.jpg') }}" alt="">
-							  <div class="hover-effect">
-								<h6><a href="#">View details</a></h6>
-							  </div>
+						<div class="featured-games header-text">
+							<div class="heading-section">
+							<h4><em>Trending</em> Animes</h4>
 							</div>
-							<h4><a href="#">Jujutsu Kaisen</a><br><span><a href="#">Shonen</a></span></h4>
-							<ul>
-							  <li><i class="fa fa-star"></i> 4.8</li>
-							  <li><i class="fa fa-download"></i> 181 Episodes</li>
-							</ul>
-						  </div>
-						  {% endfor %}
-						  
+							<div class="owl-features owl-carousel">
+							{% for trendingAnime in trendingAnimes %}
+							<div class="item">
+								<div class="thumb">
+								<a href="{{ path('app_anime_details', {'id': trendingAnime.id }) }}">
+								<img src="{{ trendingAnime.image }}" alt="" class='img-anime'>
+								</a>
+								<div class="hover-effect">
+									<h6>{% if app.user %}
+									<div class="main-button">
+									<button class="btn btn-primary add-to-list" data-anime-id="{{ trendingAnime.id }}"><i class="fa fa-plus"></i> Add To List</button>
+									</div>
+									<div id="list-options-{{ trendingAnime.id }}" class="list-options" style="display: none;">
+										<div class="dialog-container">
+											<button class="closeButton add-to-list" data-anime-id="{{ trendingAnime.id }}"><img src="{{ asset('/images/cross.png') }}" alt=""></button>
+											<div class="heading-section">
+												<h4>Save in...</h4>
+											</div>
+											<div class="overflow-auto">
+												{% for list in lists %}
+													<div class="main-border-button text-center" style="margin: 0;">
+														<a style="width: 100%;" href="{{ path('app_add_anime_in_list', {'liste': list.id, 'anime': trendingAnime.id}) }}" >
+															{{ list.nom }}
+															{% if trendingAnime in list.anime %}
+																<i class="fa fa-check"></i>
+															{% endif %}
+														</a>
+													</div>
+												{% endfor %}
+											</div>
+											<button class="btn btn-primary create-list-button mt-2" data-anime-id="{{ trendingAnime.id }}"><i class="fa fa-plus"></i> Create list</button>
+											<div id="create-list-form-{{ trendingAnime.id }}" style="display: none;" class="center"> 
+												{{ form_start(trendingForms[trendingAnime.id], {'attr': {'class': 'center'}}) }}
+													{{ form_widget(trendingForms[trendingAnime.id].nom) }}
+													{{ form_widget(trendingForms[trendingAnime.id].create) }}
+												{{ form_end(trendingForms[trendingAnime.id]) }}
+											</div>
+										</div>   
+									</div> 
+									{% else %}
+									<div class="main-button">
+									<a href="#">Follow</a>
+									</div>
+									{% endif %}</h6>
+								</div>
+								</div>
+								<h4><a href="{{ path('app_anime_details', {'id': trendingAnime.id }) }}">{{ trendingAnime.nom }}</a></h4>
+							</div>
+							{% endfor %}
+							</div>
 						</div>
-					  </div>
 					</div>
 					<div class="col-lg-4">
-					  <div class="top-downloaded">
-						<div class="heading-section">
-						  <h4><em>Top</em> Animes</h4>
-						</div>
-						<ul>
-						{% for i in 0..2 %}
-						  <li>
-							<img src="{{ asset('images/game-01.jpg') }}" alt="" class="templatemo-item">
-							<h4><a href="#">Jujutsu Kaisen</a></h4>
-							<h6><a href="#">Shonen</a></h6>
-							<span><i class="fa fa-star" style="color: yellow;"></i> 4.9</span>
-							<span><i class="fa fa-download" style="color: #ec6090;"></i> 1081 Episodes</span>
-							<div class="download">
-							  <a href="#"><i class="fa fa-download"></i></a>
+						<div class="top-streamers">
+							<div class="heading-section">
+							<h4><em>Top</em> Animes</h4>
 							</div>
-						  </li>
-						{% endfor %}
-						  
-						</ul>
-						<div class="text-button">
-						  <a href="#">View All Games</a>
+							<ul>
+							{% set count = 0 %}
+							{% for topAnime in topAnimes %}
+							{% set count = count + 1 %}
+								<li>
+									<span>0{{ count }}</span>
+									<a href="{{ path('app_anime_details', {'id': topAnime.id }) }}"><img src="{{ topAnime.image }}" alt="" style="max-width: 46px; max-height: 46px; border-radius: 50%; margin-right: 15px;"></a>
+									<h6><a href="{{ path('app_anime_details', {'id': topAnime.id }) }}">{{ topAnime.nom }}</a></h6>
+									{% if app.user %}
+									<div class="main-button">
+									<button class="btn btn-primary add-to-list" data-anime-id="{{ topAnime.id }}"><i class="fa fa-plus"></i> Add To List</button>
+									</div>
+									<div id="list-options-{{ topAnime.id }}" class="list-options" style="display: none;">
+										<div class="dialog-container">
+											<button class="closeButton add-to-list" data-anime-id="{{ topAnime.id }}"><img src="{{ asset('/images/cross.png') }}" alt=""></button>
+											<div class="heading-section">
+												<h4>Save in...</h4>
+											</div>
+											<div class="overflow-auto">
+												{% for list in lists %}
+													<div class="main-border-button text-center" style="margin: 0;">
+														<a style="width: 100%;" href="{{ path('app_add_anime_in_list', {'liste': list.id, 'anime': topAnime.id}) }}" >
+															{{ list.nom }}
+															{% if topAnime in list.anime %}
+																<i class="fa fa-check"></i>
+															{% endif %}
+														</a>
+													</div>
+												{% endfor %}
+											</div>
+											<button class="btn btn-primary create-list-button mt-2" data-anime-id="{{ topAnime.id }}"><i class="fa fa-plus"></i> Create list</button>
+											<div id="create-list-form-{{ topAnime.id }}" style="display: none;" class="center"> 
+												{{ form_start(topForms[topAnime.id], {'attr': {'class': 'center'}}) }}
+													{{ form_widget(topForms[topAnime.id].nom) }}
+													{{ form_widget(topForms[topAnime.id].create) }}
+												{{ form_end(topForms[topAnime.id]) }}
+											</div>
+										</div>   
+									</div> 
+									{% else %}
+									<div class="main-button">
+									<a href="#">Follow</a>
+									</div>
+									{% endif %}
+									
+								</li>
+							{% endfor %}
+							</ul>
 						</div>
-					  </div>
 					</div>
-				  </div>
+				</div>
 				  <!-- ***** Featured Games End ***** -->
 		
 		
 				  <!-- ***** Most Popular Start ***** -->
-				  <div class="most-popular margin-top">
-					<div class="row">
-					  <div class="col-lg-12">
-						<div class="heading-section">
-						  <h4><em>Popular</em> Animes</h4>
-						</div>
-						<div class="row">
-						{% for i in 0..8 %}
-						  <div class="col-lg-3 col-sm-6">
-							
-							<div class="item">
-								<a href="#">
-							  		<img src="{{ asset('images/popular-01.jpg') }}" alt="">
-								</a>
-							  <h4><a href="#">Jujutsu Kaisen</a><br><span><a href="#">Shonen</a></span></h4>
-							  <ul>
-								<li><i class="fa fa-star"></i> 4.8</li>
-								<li><i class="fa fa-download"></i> 180 Episodes</li>
-							  </ul>
-							</div>
-							
-						  </div>
-						{% endfor %}
-						  
-						</div>
-					  </div>
-					</div>
-				  </div>
+				  <div class="live-stream margin-top">
+                        <div class="col-lg-12">
+                          	<div class="heading-section">
+                            	<h4><em>Popular</em> Animes  </h4>
+                        	</div>
+                        <div class="row">
+                            {% for popularAnime in popularAnimes %}
+                            <div class="col-lg-3 col-sm-6">
+                                <div class="item">
+                                    <div class="thumb">
+                                      <a href="{{ path('app_anime_details', {'id': popularAnime.id }) }}">
+                                        <img src="{{ popularAnime.image }}" alt="" class="img-anime">
+                                      </a>
+                                      <div class="hover-effect">
+                                        <div class="content">
+                                          <ul>
+                                            <li>{% if app.user  %}<button class="btn btn-primary add-to-list" data-anime-id="{{ popularAnime.id }}"><i class="fa fa-plus"></i> Add To List</button>{% else %}<div class="main-border-button"><a href="{{ path('app_login')}}">Add to List</a></div>{% endif %}</li>
+                                          </ul>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div class="down-content d-flex justify-content-center align-items-center">
+                                      
+                                        <a href="{{ path('app_anime_details', {'id': popularAnime.id }) }}"> {{ popularAnime.nom }}</a>
+                                      
+                                    </div> 
+                                </div>
+                                
+                                {% if app.user %}
+                                <div id="list-options-{{ popularAnime.id }}" class="list-options" style="display: none;">
+                                    <div class="dialog-container">
+                                        <button class="closeButton add-to-list" data-anime-id="{{ popularAnime.id }}"><img src="{{ asset('/images/cross.png') }}" alt=""></button>
+                                        <div class="heading-section">
+                                            <h4>Save in...</h4>
+                                        </div>
+                                        <div class="overflow-auto">
+                                            {% for list in lists %}
+                                                <div class="main-border-button text-center" style="margin: 0;">
+                                                    <a style="width: 100%;" href="{{ path('app_add_anime_in_list', {'liste': list.id, 'anime': popularAnime.id}) }}" >
+                                                        {{ list.nom }}
+                                                        {% if popularAnime in list.anime %}
+                                                            <i class="fa fa-check"></i>
+                                                        {% endif %}
+                                                    </a>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                        <button class="btn btn-primary create-list-button mt-2" data-anime-id="{{ popularAnime.id }}"><i class="fa fa-plus"></i> Create list</button>
+                                        <div id="create-list-form-{{ popularAnime.id }}" style="display: none;" class="center"> 
+                                            {{ form_start(popularForms[popularAnime.id], {'attr': {'class': 'center'}}) }}
+                                                {{ form_widget(popularForms[popularAnime.id].nom) }}
+                                                {{ form_widget(popularForms[popularAnime.id].create) }}
+                                            {{ form_end(popularForms[popularAnime.id]) }}
+                                        </div>
+                                    </div>   
+                                </div> 
+                                {% endif %}
+                            </div>
+                            {% endfor %}
+                        </div>
+                	</div>
 				  <!-- ***** Most Popular End ***** -->
 			</div>
 		</div>

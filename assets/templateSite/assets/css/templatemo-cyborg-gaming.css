@@ -154,7 +154,6 @@ p {
 
 .templatemo-item {
 	max-width: 80px; 
-  height: 110px;
 	border-radius: 23px;
 }
 
@@ -971,7 +970,6 @@ Featured Games Style
 }
 
 .featured-games .item .thumb {
-  
   overflow: hidden;
 }
 
@@ -1716,6 +1714,10 @@ Profile Style
 
 .margin-top {
   margin-top: 60px;
+}
+
+.img-anime {
+  height: 370px;
 }
 
 /* 
