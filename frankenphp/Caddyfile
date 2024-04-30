@@ -10,12 +10,12 @@
 	order vulcain after reverse_proxy
 	order php_server before file_server
 
-	auto_https off
+	
 }
 
 {$CADDY_EXTRA_CONFIG}
 
-{$SERVER_NAME:10.187.22.26} {
+{$SERVER_NAME:localhost}:80 {
 	log {
 		# Redact the authorization query parameter that can be set by Mercure
 		format filter {
@@ -55,5 +55,4 @@
 
 	php_server
 
-	
 }
