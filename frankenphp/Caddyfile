@@ -52,4 +52,6 @@
 	header ?Permissions-Policy "browsing-topics=()"
 
 	php_server
+
+	auto_https off
 }
