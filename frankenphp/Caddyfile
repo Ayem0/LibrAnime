@@ -9,6 +9,8 @@
 	order mercure after encode
 	order vulcain after reverse_proxy
 	order php_server before file_server
+
+	auto_https off
 }
 
 {$CADDY_EXTRA_CONFIG}
@@ -53,5 +55,5 @@
 
 	php_server
 
-	auto_https off
+	
 }
