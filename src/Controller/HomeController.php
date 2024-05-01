@@ -61,7 +61,7 @@ class HomeController extends AbstractController
         ';
         $variables = [
             "page" => 1,
-            "perPage" => 5,
+            "perPage" => 3,
             "isAdult" => false,
             "excludedGenres" => ["Ecchi"],
             "mediaType" => "ANIME",
@@ -77,7 +77,7 @@ class HomeController extends AbstractController
 
         $popularVariables = [
             "page" => 1,
-            "perPage" => 25,
+            "perPage" => 8,
             "isAdult" => false,
             "excludedGenres" => ["Ecchi"],
             "mediaType" => "ANIME",
@@ -91,10 +91,9 @@ class HomeController extends AbstractController
             ]
         ]);
 
-
         $trendingVariables = [
             "page" => 1,
-            "perPage" => 10,
+            "perPage" => 20,
             "isAdult" => false,
             "excludedGenres" => ["Ecchi"],
             "mediaType" => "ANIME",
@@ -105,6 +104,64 @@ class HomeController extends AbstractController
             'json' => [
                 'query' => $apiQuery,
                 'variables' => $trendingVariables,
+            ]
+        ]);
+
+        $apiQueryPopular = '
+        query ($id: Int, $page: Int, $perPage: Int, $isAdult: Boolean, $excludedGenres: [String], $mediaType: MediaType, $sort: [MediaSort], $seasonYear: Int, $season: MediaSeason) {
+            Page(page: $page, perPage: $perPage) {
+                pageInfo {
+                    total
+                    currentPage
+                    lastPage
+                    hasNextPage
+                    perPage
+                }
+                media (id: $id, isAdult: $isAdult, genre_not_in: $excludedGenres, type: $mediaType sort: $sort, seasonYear: $seasonYear, season: $season) {
+                    id
+                    title {
+                        romaji
+                    }
+                    description
+                    coverImage {
+                        large
+        
+                    }
+                    startDate {
+                        year
+                 
+                    }
+                    endDate {
+                        year
+                    }
+                    episodes
+                    status
+                    format
+                    genres
+                    trailer {
+                        id
+                        site
+                        thumbnail
+                    }
+                }
+            }
+        }
+        ';
+        $popularThisSeasonVariables = [
+            "page" => 1,
+            "seasonYear" => 2024,
+            "season" => "SPRING",
+            "perPage" => 8,
+            "isAdult" => false,
+            "excludedGenres" => ["Ecchi"],
+            "mediaType" => "ANIME",
+            "sort" => ["POPULARITY_DESC"],
+        ];
+        $popularThisSeasonHttp = new Client();
+        $popularThisSeasonResponse = $popularThisSeasonHttp->post('https://graphql.anilist.co', [
+            'json' => [
+                'query' => $apiQueryPopular,
+                'variables' => $popularThisSeasonVariables,
             ]
         ]);
 
@@ -394,6 +451,95 @@ class HomeController extends AbstractController
             echo 'requete echoue';
         }
 
+        if ($popularThisSeasonResponse->getStatusCode() === 200) {
+            $content = $popularThisSeasonResponse->getBody()->getContents();
+            $result = json_decode($content, true);
+            
+            $animeData = $result['data']['Page']['media'];
+            //var_dump($animeData);
+            foreach ($animeData as $anime) {
+                // RECUPERE L'ID DE LANIME ET VERIFIE SI DANS LA DB
+                
+                $title = $anime['title']['romaji'];
+                $malId = $anime['id'];
+                $existingAnime = $entityManager->getRepository(Anime::class)->findOneBy(['mal_id' => $malId]);
+                if (!$existingAnime) {
+                    // SI PAS DANS DB
+                    
+                    $image = $anime['coverImage']['large'];
+                    $synopsis = $anime['description'];
+                    $startYear = $anime['startDate']['year'];
+                    $endYear = $anime['endDate']['year'];
+                    $episodes = $anime['episodes'];
+                    $genres = null;
+                    $format = null;
+                    $status = $anime['status'];
+                    $trailer = $anime['trailer'];
+                    if ($anime['genres'] != null) {
+                        $genres = $anime['genres'];
+                    }
+                    if ($anime['format'] != null) {
+                        $format = $anime['format'];
+                    }
+
+                    $newAnime = new Anime();
+                    $newAnime->setNom($title);
+                    $newAnime->setImage($image);
+                    $newAnime->setMalId($malId);
+                    $newAnime->setSynopsis($synopsis);
+                    $newAnime->setYear($startYear);
+                    $newAnime->setEpisodes($episodes);
+                    
+                    if ($trailer != null) {
+                        $trailerImg = $trailer['thumbnail'];
+                        $trailerSite = $trailer['site'];
+                        $trailerLink = $trailer['id'];
+                        $trailerUrl = '';
+                        if ($trailerSite === 'youtube') {
+                            $trailerUrl = 'https://www.youtube.com/watch?v=' . $trailerLink;
+                        } else {
+                            $trailerUrl = 'https://www.dailymotion.com/video/' . $trailerLink;
+                        }
+                        $newAnime->setTrailerImg($trailerImg);
+                        $newAnime->setTrailerUrl($trailerUrl);
+                    }
+                    
+                    if ( $genres != null) {
+                        for ($i = 0; $i < count($genres); $i++) {
+                            // Votre code ici
+                            $categorieName = $genres[$i];
+                            $existingCategorie = $entityManager->getRepository(Categorie::class)->findOneBy(['nom' => $categorieName]);
+                            if (!$existingCategorie) {
+                                $newCategorie = new Categorie();
+                                $newCategorie->setNom($categorieName);
+                                $entityManager->persist($newCategorie);
+                                $entityManager->flush();
+                                $newAnime->addCategorie($newCategorie);
+                            } else {
+                                $newAnime->addCategorie($existingCategorie);
+                            }
+                        }
+                    }
+                    $entityManager->persist($newAnime);
+                    $entityManager->flush();
+                    $popularThisSeasonAnimes[] = $newAnime;
+                    // LISTE DES FORMULAIRES
+                    $list = new Liste();
+                    $form2 = $this->createForm(CreateListFormType::class, $list);
+                    $popularThisSeasonForms[$newAnime->getId()] = $form2->createView();
+                } else {
+                    $popularThisSeasonAnimes[] = $existingAnime;
+                    // LISTE DES FORMULAIRES
+                    $list = new Liste();
+                    $form2 = $this->createForm(CreateListFormType::class, $list);
+                    $popularThisSeasonForms[$existingAnime->getId()] = $form2->createView();
+                }
+            }
+        } else {
+            // modifier ici pour faire la requete direct dans ma base de données
+            echo 'requete echoue';
+        }
+
         $form = $this->createForm(SearchFormType::class);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -403,6 +549,18 @@ class HomeController extends AbstractController
                 return  $this->redirectToRoute('app_result_query', ['query' => $data, 'page' => 1]);
             }
         }
+
+        if (isset($form2)) {
+            $form2->handleRequest($request);
+            if ($form2->isSubmitted() && $form2->isValid()) {
+                $list->setUserId($user);
+                $entityManager->persist($list);
+                $entityManager->flush();
+                
+                return $this->redirectToRoute('app_home');
+            }
+        }
+
         return $this->render('home/index.html.twig', [
             'searchForm' => $form,
             'topAnimes' => $topAnimes,
@@ -411,7 +569,9 @@ class HomeController extends AbstractController
             'popularForms' => $popularForms,
             'trendingAnimes' => $trendingAnimes,
             'trendingForms' => $trendingForms,
-            'lists' => $listsArray
+            'lists' => $listsArray,
+            'popularThisSeasonAnimes' => $popularThisSeasonAnimes,
+            'popularThisSeasonForms' => $popularThisSeasonForms,
         ]);
     }
 }

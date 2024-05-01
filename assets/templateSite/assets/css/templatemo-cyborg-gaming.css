@@ -967,6 +967,8 @@ Featured Games Style
   border-radius: 23px;
   background-color: #1f2122;
   padding: 30px;
+  min-height: 567px;
+  max-height: 567px;
 }
 
 .featured-games .item .thumb {
@@ -975,7 +977,7 @@ Featured Games Style
 
 .featured-games .item .thumb .hover-effect {
   position: absolute;
-  top: 300px;
+  top: 250px;
   text-align: center;
   width: 100%;
   opacity: 0;
@@ -1719,6 +1721,10 @@ Profile Style
 
 .img-anime {
   height: 370px;
+}
+
+.img-carousel {
+  height: 310px;
 }
 
 

@@ -10,12 +10,13 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 use App\Form\SearchFormType;
 use App\Form\CreateListFormType;
+use Doctrine\ORM\EntityManagerInterface;
 
 class CategorieDetailsController extends AbstractController
 {
     #[Route('/categories/{id}', name: 'app_categorie_details')]
 
-    public function index(ManagerRegistry $doctrine, int $id, Request $request): Response
+    public function index(ManagerRegistry $doctrine, EntityManagerInterface $entityManager, int $id, Request $request): Response
     {
         $category = $doctrine->getRepository(Categorie::class)->findOneBy(['id' => $id]);
         $animeInCategory = $category->getAnimes()->toArray();
@@ -53,6 +54,17 @@ class CategorieDetailsController extends AbstractController
             if ($form->isSubmitted() && $form->isValid()) {
                 $data = strval($form->get('search')->getData());
                 return  $this->redirectToRoute('app_result_query', ['query' => $data, 'page' => 1]);
+            }
+        }
+
+        if (isset($form2)) {
+            $form2->handleRequest($request);
+            if ($form2->isSubmitted() && $form2->isValid()) {
+                $list->setUserId($user);
+                $entityManager->persist($list);
+                $entityManager->flush();
+                
+                return $this->redirectToRoute('app_categorie_details', ['id' => $id]);
             }
         }
 

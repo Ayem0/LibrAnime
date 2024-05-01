@@ -75,10 +75,8 @@
             "allow-contrib": false,
             "require": "7.0.*",
             "docker": true
-        },
-        "runtime": {
-            "dotenv_overload": true
         }
+        
     },
     "require-dev": {
         "symfony/maker-bundle": "^1.57",

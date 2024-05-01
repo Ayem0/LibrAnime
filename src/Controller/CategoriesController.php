@@ -34,6 +34,8 @@ class CategoriesController extends AbstractController
                 return  $this->redirectToRoute('app_result_query', ['query' => $data, 'page' => 1]);
             }
         }
+
+
         return $this->render('categories/index.html.twig', [
             'categories' => $categories,
             'animeInCategorie' => $catgoriesCount,
