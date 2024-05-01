@@ -172,7 +172,16 @@
 								  <div class="hover-effect">
 									<div class="content">
 									  <ul>
-										<li>{% if app.user  %}<div class="main-button"><button class="add-to-list" data-anime-id="{{ popularThisSeasonAnime.id }}"><i class="fa fa-plus"></i> Add To List</button></div>{% else %}<div class="main-border-button"><a href="{{ path('app_login')}}">Add to List</a></div>{% endif %}</li>
+										<li>{% if app.user  %}
+											<div class="main-button">
+												<button class="add-to-list" data-anime-id="{{ popularThisSeasonAnime.id }}"><i class="fa fa-plus"></i> Add To List</button>
+											</div>
+											{% else %}
+											<div class="main-border-button">
+												<a href="{{ path('app_login')}}">Add to List</a>
+											</div>
+											{% endif %}
+										</li>
 									  </ul>
 									</div>
 								  </div>
