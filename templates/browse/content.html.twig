@@ -50,20 +50,22 @@
                     <div class="live-stream">
                         <div class="col-lg-12">
                             <div class="row mt-3 mb-3">
-                                <div class="col text-end">
-                                    <button class="btn btn-secondary" >
+                                
+                                <div class="col-md-2" style="color: white;">{% if animes.getTotalItemCount %}{{ animes.getTotalItemCount }} Results{% else %}No results{% endif %}</div>
+                                <div class="col-md-10 text-end">
+                                    <button class="btn btn-secondary mb-3" >
                                         {{ knp_pagination_sortable(animes, 'Popularity', 'a.popularityScore') }}
                                     </button>
-                                    <button class="btn btn-secondary">
+                                    <button class="btn btn-secondary mb-3">
                                         {{ knp_pagination_sortable(animes, 'Title', 'a.nom', {}, {'default_direction': 'desc'}) }}
                                     </button>
-                                    <button class="btn btn-secondary">
+                                    <button class="btn btn-secondary mb-3">
                                         {{ knp_pagination_sortable(animes, 'Average Score', 'a.averageScore') }}
                                     </button>
-                                    <button class="btn btn-secondary">
+                                    <button class="btn btn-secondary mb-3">
                                         {{ knp_pagination_sortable(animes, 'Trending', 'a.trendingScore') }}
                                     </button>
-                                    <button class="btn btn-secondary">
+                                    <button class="btn btn-secondary mb-3">
                                         {{ knp_pagination_sortable(animes, 'Release Date', 'a.startDate') }}
                                     </button>
                                    
