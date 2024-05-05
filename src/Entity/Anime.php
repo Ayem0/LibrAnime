@@ -41,16 +41,45 @@ class Anime
     #[ORM\Column(nullable: true)]
     private ?int $episodes = null;
 
-    #[ORM\Column(nullable: true)]
-    private ?int $year = null;
+    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $startDate = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $synopsis = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $averageScore = null;
+
+    #[ORM\ManyToOne(inversedBy: 'animes')]
+    private ?Format $format = null;
+
+    #[ORM\ManyToOne(inversedBy: 'animes')]
+    private ?Season $season = null;
+
+    #[ORM\ManyToOne(inversedBy: 'animes')]
+    private ?Status $status = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $popularityScore = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $trendingScore = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $source = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $duration = null;
+
+    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $endDate = null;
+
 
     public function __construct()
     {
         $this->categorie = new ArrayCollection();
         $this->listes = new ArrayCollection();
+
     }
 
     public function getId(): ?int
@@ -181,14 +210,14 @@ class Anime
         return $this;
     }
 
-    public function getYear(): ?int
+    public function getStartDate(): ?\DateTimeInterface
     {
-        return $this->year;
+        return $this->startDate;
     }
 
-    public function setYear(?int $year): static
+    public function setStartDate(?\DateTimeInterface $startDate): static
     {
-        $this->year = $year;
+        $this->startDate = $startDate;
 
         return $this;
     }
@@ -204,4 +233,113 @@ class Anime
 
         return $this;
     }
+
+    public function getAverageScore(): ?int
+    {
+        return $this->averageScore;
+    }
+
+    public function setAverageScore(?int $averageScore): static
+    {
+        $this->averageScore = $averageScore;
+
+        return $this;
+    }
+
+    public function getFormat(): ?Format
+    {
+        return $this->format;
+    }
+
+    public function setFormat(?Format $format): static
+    {
+        $this->format = $format;
+
+        return $this;
+    }
+
+    public function getSeason(): ?Season
+    {
+        return $this->season;
+    }
+
+    public function setSeason(?Season $season): static
+    {
+        $this->season = $season;
+
+        return $this;
+    }
+
+    public function getStatus(): ?Status
+    {
+        return $this->status;
+    }
+
+    public function setStatus(?Status $status): static
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    public function getPopularityScore(): ?int
+    {
+        return $this->popularityScore;
+    }
+
+    public function setPopularityScore(?int $popularityScore): static
+    {
+        $this->popularityScore = $popularityScore;
+
+        return $this;
+    }
+
+    public function getTrendingScore(): ?int
+    {
+        return $this->trendingScore;
+    }
+
+    public function setTrendingScore(?int $trendingScore): static
+    {
+        $this->trendingScore = $trendingScore;
+
+        return $this;
+    }
+
+    public function getSource(): ?string
+    {
+        return $this->source;
+    }
+
+    public function setSource(?string $source): static
+    {
+        $this->source = $source;
+
+        return $this;
+    }
+
+    public function getDuration(): ?int
+    {
+        return $this->duration;
+    }
+
+    public function setDuration(?int $duration): static
+    {
+        $this->duration = $duration;
+
+        return $this;
+    }
+
+    public function getEndDate(): ?\DateTimeInterface
+    {
+        return $this->endDate;
+    }
+
+    public function setEndDate(?\DateTimeInterface $endDate): static
+    {
+        $this->endDate = $endDate;
+
+        return $this;
+    }
+    
 }

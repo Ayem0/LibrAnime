@@ -1,0 +1,149 @@
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-content">
+                <!-- ***** Gaming Library Start ***** -->
+                    <div class="live-stream mb-4">
+                        <div class="col-lg-12">
+                            <div class="row">
+                                <div class="col">
+                                    {{ form_start(filterForm, {'attr': {'class': 'row g-3'}}) }}
+                                        <div class="col-md-4">
+                                            {{ form_row(filterForm.q, {'attr': {'class': 'form-control', 'placeholder': 'Search an anime...'}}) }}
+                                        </div>
+                                        <div class="col-md-2">
+                                            {{ form_row(filterForm.categories, {'attr': {'class': 'form-select'}}) }}
+                                        </div>
+                                        <div class="col-md-2">
+                                            {{ form_row(filterForm.formats, {'attr': {'class': 'form-select'}}) }}
+                                        </div>
+                                        <div class="col-md-2">
+                                            {{ form_row(filterForm.seasons, {'attr': {'class': 'form-select'}}) }}
+                                        </div>
+                                        <div class="col-md-2">
+                                            {{ form_row(filterForm.status, {'attr': {'class': 'form-select'}}) }}
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-2 mt-3">
+                                                {{ form_row(filterForm.min, {'attr': {'class': 'form-control'}}) }}
+                                            </div>
+                                            <div class="col-md-2 mt-3">
+                                                {{ form_row(filterForm.max, {'attr': {'class': 'form-control'}}) }}
+                                            </div>
+                                            
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div id="year-slider"></div>
+                                        </div>
+                                        
+                                        
+                                        <div class="col d-flex justify-content-end">
+                                            <button type="submit" class="btn btn-primary">Filter</button>
+                                        </div>
+                                    {{ form_end(filterForm) }}
+                                </div>
+                            </div>
+                            
+                            
+                        </div>
+                    </div>
+                    <div class="live-stream">
+                        <div class="col-lg-12">
+                            <div class="row mt-3 mb-3">
+                                <div class="col text-end">
+                                    <button class="btn btn-secondary" >
+                                        {{ knp_pagination_sortable(animes, 'Popularity', 'a.popularityScore') }}
+                                    </button>
+                                    <button class="btn btn-secondary">
+                                        {{ knp_pagination_sortable(animes, 'Title', 'a.nom', {}, {'default_direction': 'desc'}) }}
+                                    </button>
+                                    <button class="btn btn-secondary">
+                                        {{ knp_pagination_sortable(animes, 'Average Score', 'a.averageScore') }}
+                                    </button>
+                                    <button class="btn btn-secondary">
+                                        {{ knp_pagination_sortable(animes, 'Trending', 'a.trendingScore') }}
+                                    </button>
+                                    <button class="btn btn-secondary">
+                                        {{ knp_pagination_sortable(animes, 'Release Date', 'a.startDate') }}
+                                    </button>
+                                   
+                                </div>
+                            </div>
+                        <div class="row">
+                        {% if animes %}
+                            {% for anime in animes %}
+                            <div class="col-lg-3 col-sm-6">
+                                
+                                <div class="item">
+                                    <div class="thumb">
+                                      <a href="{{ path('app_anime_details', {'id': anime.id }) }}">
+                                        <img src="{{ anime.image }}" alt="" class="img-anime">
+                                      </a>
+                                      <div class="hover-effect">
+                                        <div class="content">
+                                          <ul>
+                                            <li>{% if app.user  %}<div class="main-button"><button class="btn btn-primary add-to-list" data-anime-id="{{ anime.id }}"><i class="fa fa-plus"></i> Add To List</button></div> {% else %}<div class="main-border-button"><a href="{{ path('app_login')}}">Add to List</a></div>{% endif %}</li>
+                                          </ul>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div class="down-content d-flex justify-content-center align-items-center">
+                                      
+                                        <a href="{{ path('app_anime_details', {'id': anime.id }) }}"> {{ anime.nom }}</a>
+                                      
+                                    </div> 
+                                </div>
+                                
+                                
+                            </div>
+                            {% endfor %}
+                        </div>
+                        
+                        {% else %}
+                            <h4><em>No results found</em></h4>
+                        {% endif %}
+                    </div>
+                    
+                </div>
+                <div class="d-flex align-items-center justify-content-center mt-4">
+                    {{ knp_pagination_render(animes)}}
+                </div>
+            
+                <!-- ***** Gaming Library End ***** -->
+            </div>
+        </div>
+    </div>
+</div>
+{% if app.user %}
+{% for anime in animes %}
+<div id="list-options-{{ anime.id }}" class="list-options" style="display: none;">
+    <div class="dialog-container">
+        <button class="closeButton add-to-list" data-anime-id="{{ anime.id }}"><img src="{{ asset('/images/cross.png') }}" alt=""></button>
+        <div class="heading-section">
+            <h4>Save in...</h4>
+        </div>
+        <div class="overflow-auto">
+            {% for list in lists %}
+                <div class="main-border-button text-center" style="margin: 0;">
+                    <a style="width: 100%;" href="{{ path('app_add_anime_in_list', {'liste': list.id, 'anime': anime.id}) }}" >
+                        {{ list.nom }}
+                        {% if anime in list.anime %}
+                            <i class="fa fa-check"></i>
+                        {% endif %}
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="main-button">
+            <button class="create-list-button mt-2" data-anime-id="{{ anime.id }}"><i class="fa fa-plus"></i> Create list</button>
+        </div>
+        <div id="create-list-form-{{ anime.id }}" style="display: none;" class="center"> 
+            {{ form_start(listForm[anime.id], {'attr': {'class': 'center'}}) }}
+                {{ form_widget(listForm[anime.id].nom) }}
+                {{ form_widget(listForm[anime.id].create) }}
+            {{ form_end(listForm[anime.id]) }}
+        </div>
+    </div>   
+</div>
+{% endfor %}
+{% endif %}

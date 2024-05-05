@@ -2,10 +2,12 @@
 
 namespace App\Repository;
 
+use App\Data\SearchData;
 use App\Entity\Anime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
-
+use Knp\Component\Pager\PaginatorInterface;
+use Knp\Component\Pager\Pagination\PaginationInterface;
 /**
  * @extends ServiceEntityRepository<Anime>
  *
@@ -16,9 +18,88 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class AnimeRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $registry, PaginatorInterface $paginator)
     {
         parent::__construct($registry, Anime::class);
+        $this->paginator = $paginator;
+    }
+
+    public function findSearch(SearchData $search): PaginationInterface
+    {
+        $query = $this
+            ->createQueryBuilder('a')
+            ->join('a.categorie', 'c')
+            ->join('a.format', 'f')
+            ->join('a.season', 's')
+            ->join('a.status', 'st');
+                    
+
+        if (!empty($search->q)) {
+            $query = $query
+                ->andWhere('LOWER(a.nom) LIKE LOWER(:q)')
+                ->setParameter('q', "%{$search->q}%");
+        }
+
+        if (!empty($search->categories)) {
+            $query = $query
+                ->andWhere('c.id IN (:categories)')
+                ->setParameter('categories', $search->categories);
+        }
+
+        if (!empty($search->status)) {
+            $query = $query
+                ->andWhere('st.id IN (:status)')
+                ->setParameter('status', $search->status);
+        }
+
+        if (!empty($search->seasons)) {
+            $query = $query
+                ->andWhere('s.id IN (:seasons)')
+                ->setParameter('seasons', $search->seasons);
+        }
+
+        if (!empty($search->formats)) {
+            $query = $query
+                ->andWhere('f.id IN (:formats)')
+                ->setParameter('formats', $search->formats);
+        }
+
+        if (!empty($search->min)) {
+            $minDate = new \DateTime($search->min . '/01/01');
+            $query = $query
+                ->andWhere('a.startDate >= :minDate')
+                ->setParameter('minDate', $minDate);
+        }
+
+        if (!empty($search->max)) {
+            $maxDate = new \DateTime($search->max . '/12/31');
+            $query = $query
+                ->andWhere('a.endDate <= :maxDate')
+                ->setParameter('maxDate', $maxDate);
+        }
+
+        if (!empty($search->orderBy)) {
+            if ($search->orderBy === 'popularity' || $search->orderBy === 1) {
+                $query = $query->orderBy('a.popularityScore', 'DESC');
+            }
+            if ($search->orderBy === 2) {
+                    $query = $query->orderBy('a.nom', 'ASC');
+            }
+            if ($search->orderBy === 3) {
+                    $query = $query->orderBy('a.averageScore', 'DESC');
+            }
+            if ($search->orderBy === 4) {
+                    $query = $query->orderBy('a.startDate', 'DESC');
+            }
+        }
+        
+
+        $query = $query->getQuery();
+        return $this->paginator->paginate(
+            $query,
+            $search->page,
+            40
+        );
     }
 
     //    /**

@@ -2,13 +2,13 @@
 
 namespace App\Entity;
 
-use App\Repository\CategorieRepository;
+use App\Repository\FormatRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: CategorieRepository::class)]
-class Categorie
+#[ORM\Entity(repositoryClass: FormatRepository::class)]
+class Format
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -18,7 +18,10 @@ class Categorie
     #[ORM\Column(length: 255)]
     private ?string $nom = null;
 
-    #[ORM\ManyToMany(targetEntity: Anime::class, mappedBy: 'categorie')]
+    /**
+     * @var Collection<int, Anime>
+     */
+    #[ORM\OneToMany(targetEntity: Anime::class, mappedBy: 'format')]
     private Collection $animes;
 
     public function __construct()
@@ -55,7 +58,7 @@ class Categorie
     {
         if (!$this->animes->contains($anime)) {
             $this->animes->add($anime);
-            $anime->addCategorie($this);
+            $anime->setFormat($this);
         }
 
         return $this;
@@ -64,7 +67,10 @@ class Categorie
     public function removeAnime(Anime $anime): static
     {
         if ($this->animes->removeElement($anime)) {
-            $anime->removeCategorie($this);
+            // set the owning side to null (unless already changed)
+            if ($anime->getFormat() === $this) {
+                $anime->setFormat(null);
+            }
         }
 
         return $this;

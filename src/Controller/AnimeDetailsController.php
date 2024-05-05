@@ -6,6 +6,9 @@ use GuzzleHttp\Client;
 use App\Entity\Anime;
 use App\Entity\Categorie;
 use App\Entity\Liste;
+use App\Entity\Format;
+use App\Entity\Season;
+use App\Entity\Status;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -39,16 +42,26 @@ class AnimeDetailsController extends AbstractController
                                 large
                             }
                             startDate {
+                                day
+                                month
                                 year
 
                             }
                             endDate {
+                                day
+                                month
                                 year
                         
                             }
                             episodes
                             status
                             format
+                            source 
+                            duration
+                            season
+                            popularity
+                            averageScore
+                            trending
                             genres
                             trailer {
                                 id
@@ -69,14 +82,24 @@ class AnimeDetailsController extends AbstractController
                             large
                         }
                         startDate {
+                            day
+                            month
                             year
                         }
                         endDate {
+                            day
+                            month
                             year
                         }
                         episodes
                         status
                         format
+                        season
+                        source
+                        duration
+                        popularity
+                        averageScore
+                        trending
                         genres
                         trailer {
                             id
@@ -103,8 +126,12 @@ class AnimeDetailsController extends AbstractController
 
         $recommendationsArray = [];
         $relationsArray = [];
+        
+        
+        
+        // $relationsArray = $anime->getRecommendedTo();
 
-
+        
         if ($response->getStatusCode() === 200) {
             $content = $response->getBody()->getContents();
             $result = json_decode($content, true);
@@ -114,9 +141,9 @@ class AnimeDetailsController extends AbstractController
             //var_dump($recommendations);
             //var_dump($relations);
 
-            foreach ($recommendations as $animeSelected) {
+            foreach ($recommendations as $truc) {
                 // RECUPERE L'ID DE LANIME ET VERIFIE SI DANS LA DB
-                $selected = $animeSelected['mediaRecommendation'];
+                $selected = $truc['mediaRecommendation'];
                 if ($selected != null) {
                     $badGenres = ['Hentai', 'Ecchi'];
                     $badFormats = ['MANGA', 'NOVEL', 'ONE_SHOT'];
@@ -146,20 +173,74 @@ class AnimeDetailsController extends AbstractController
                             $title = $selected['title']['romaji'];
                             $image = $selected['coverImage']['large'];
                             $synopsis = $selected['description'];
+                            $source = $selected['source'];
+                            $duration = $selected['duration'];
+        
+                            $startDay = $selected['startDate']['day'];
+                            $startMonth = $selected['startDate']['month'];
                             $startYear = $selected['startDate']['year'];
+                            
+                            $startDateString = $startDay . '/' . $startMonth . '/' . $startYear;
+                            $startDate = \DateTime::createFromFormat('d/m/Y', $startDateString);
+        
+                            $endDay = $selected['endDate']['day'];
+                            $endMonth = $selected['endDate']['month'];
                             $endYear = $selected['endDate']['year'];
+                            
+                            $endDateString = $endDay . '/' . $endMonth . '/' . $endYear;
+                            $endDate = \DateTime::createFromFormat('d/m/Y', $endDateString);
+        
                             $episodes = $selected['episodes'];
+        
+                            $popularityScore = $selected['popularity'];
+                            $averageScore = $selected['averageScore'];
+                            $trendingScore = $selected['trending'];
+        
                             $status = $selected['status'];
+                            $format = $selected['format'];
+                            $season = $selected['season'];
+        
+                            $genres = null;
                             $trailer = $selected['trailer'];
-
+                            if (isset($selected['genres'])) {
+                                $genres = $selected['genres'];
+                            }
+        
+                            
+        
                             $newAnime = new Anime();
                             $newAnime->setNom($title);
                             $newAnime->setImage($image);
                             $newAnime->setMalId($malId);
                             $newAnime->setSynopsis($synopsis);
-                            $newAnime->setYear($startYear);
                             $newAnime->setEpisodes($episodes);
-
+                            $newAnime->setPopularityScore($popularityScore);
+                            $newAnime->setAverageScore($averageScore);
+                            $newAnime->setTrendingScore($trendingScore);
+                            
+                            $newAnime->setSource($source);
+                            $newAnime->setDuration($duration);
+        
+                            if ( $endDate != false) {
+                                $newAnime->setEndDate($endDate);
+                            }
+        
+                            if ( $startDate != false) {
+                                $newAnime->setStartDate($startDate);
+                            }
+                            
+                            if ($format != null) {
+                                $formatEntity = $entityManager->getRepository(Format::class)->findOneBy(['nom' => $format]);
+                                $newAnime->setFormat($formatEntity);
+                            }
+                            if ($season != null) {
+                                $seasonEntity = $entityManager->getRepository(Season::class)->findOneBy(['nom' => $season]);
+                                $newAnime->setSeason($seasonEntity);
+                            }
+                            if ($status != null) {
+                                $statusEntity = $entityManager->getRepository(Status::class)->findOneBy(['nom' => $status]);
+                                $newAnime->setstatus($statusEntity);
+                            }
                             if ($trailer != null) {
                                 $trailerImg = $trailer['thumbnail'];
                                 $trailerSite = $trailer['site'];
@@ -173,23 +254,17 @@ class AnimeDetailsController extends AbstractController
                                 $newAnime->setTrailerImg($trailerImg);
                                 $newAnime->setTrailerUrl($trailerUrl);
                             }
-                            $entityManager->persist($newAnime);
-                            $entityManager->flush();
-
-                            for ($i = 0; $i < count($genres); $i++) {
-                                // Votre code ici
-                                $categorieName = $genres[$i];
-                                $existingCategorie = $entityManager->getRepository(Categorie::class)->findOneBy(['nom' => $categorieName]);
-                                if (!$existingCategorie) {
-                                    $newCategorie = new Categorie();
-                                    $newCategorie->setNom($categorieName);
-                                    $entityManager->persist($newCategorie);
-                                    $entityManager->flush();
-                                    $newAnime->addCategorie($newCategorie);
-                                } else {
+                            
+                            if ( $genres != null) {
+                                for ($i = 0; $i < count($genres); $i++) {
+                                    // Votre code ici
+                                    $categorieName = $genres[$i];
+                                    $existingCategorie = $entityManager->getRepository(Categorie::class)->findOneBy(['nom' => $categorieName]);
                                     $newAnime->addCategorie($existingCategorie);
                                 }
                             }
+                            $entityManager->persist($newAnime);
+                            $entityManager->flush();
                             $recommendationsArray[] = $newAnime;
                         } else {
                             $recommendationsArray[] = $existingAnime;
@@ -229,20 +304,74 @@ class AnimeDetailsController extends AbstractController
                         $title = $relation['title']['romaji'];
                         $image = $relation['coverImage']['large'];
                         $synopsis = $relation['description'];
+                        $source = $relation['source'];
+                        $duration = $relation['duration'];
+
+                        $startDay = $relation['startDate']['day'];
+                        $startMonth = $relation['startDate']['month'];
                         $startYear = $relation['startDate']['year'];
+                        
+                        $startDateString = $startDay . '/' . $startMonth . '/' . $startYear;
+                        $startDate = \DateTime::createFromFormat('d/m/Y', $startDateString);
+
+                        $endDay = $relation['endDate']['day'];
+                        $endMonth = $relation['endDate']['month'];
                         $endYear = $relation['endDate']['year'];
+                        
+                        $endDateString = $endDay . '/' . $endMonth . '/' . $endYear;
+                        $endDate = \DateTime::createFromFormat('d/m/Y', $endDateString);
+
                         $episodes = $relation['episodes'];
+
+                        $popularityScore = $relation['popularity'];
+                        $averageScore = $relation['averageScore'];
+                        $trendingScore = $relation['trending'];
+
                         $status = $relation['status'];
+                        $format = $relation['format'];
+                        $season = $relation['season'];
+
+                        $genres = null;
                         $trailer = $relation['trailer'];
+                        if (isset($relation['genres'])) {
+                            $genres = $relation['genres'];
+                        }
+
+                        
 
                         $newAnime = new Anime();
                         $newAnime->setNom($title);
                         $newAnime->setImage($image);
                         $newAnime->setMalId($malId);
                         $newAnime->setSynopsis($synopsis);
-                        $newAnime->setYear($startYear);
                         $newAnime->setEpisodes($episodes);
+                        $newAnime->setPopularityScore($popularityScore);
+                        $newAnime->setAverageScore($averageScore);
+                        $newAnime->setTrendingScore($trendingScore);
+                        
+                        $newAnime->setSource($source);
+                        $newAnime->setDuration($duration);
 
+                        if ( $endDate != false) {
+                            $newAnime->setEndDate($endDate);
+                        }
+
+                        if ( $startDate != false) {
+                            $newAnime->setStartDate($startDate);
+                        }
+                        
+                        if ($format != null) {
+                            $formatEntity = $entityManager->getRepository(Format::class)->findOneBy(['nom' => $format]);
+                            $newAnime->setFormat($formatEntity);
+                        }
+                        if ($season != null) {
+                            $seasonEntity = $entityManager->getRepository(Season::class)->findOneBy(['nom' => $season]);
+                            $newAnime->setSeason($seasonEntity);
+                        }
+                        if ($status != null) {
+                            $statusEntity = $entityManager->getRepository(Status::class)->findOneBy(['nom' => $status]);
+                            $newAnime->setstatus($statusEntity);
+                        }
                         if ($trailer != null) {
                             $trailerImg = $trailer['thumbnail'];
                             $trailerSite = $trailer['site'];
@@ -256,24 +385,18 @@ class AnimeDetailsController extends AbstractController
                             $newAnime->setTrailerImg($trailerImg);
                             $newAnime->setTrailerUrl($trailerUrl);
                         }
-                        $entityManager->persist($newAnime);
-                        $entityManager->flush();
-
-                        for ($i = 0; $i < count($genres); $i++) {
-                            // Votre code ici
-                            $categorieName = $genres[$i];
-                            $existingCategorie = $entityManager->getRepository(Categorie::class)->findOneBy(['nom' => $categorieName]);
-                            if (!$existingCategorie) {
-                                $newCategorie = new Categorie();
-                                $newCategorie->setNom($categorieName);
-                                $entityManager->persist($newCategorie);
-                                $entityManager->flush();
-                                $newAnime->addCategorie($newCategorie);
-                            } else {
+                        
+                        if ( $genres != null) {
+                            for ($i = 0; $i < count($genres); $i++) {
+                                // Votre code ici
+                                $categorieName = $genres[$i];
+                                $existingCategorie = $entityManager->getRepository(Categorie::class)->findOneBy(['nom' => $categorieName]);
                                 $newAnime->addCategorie($existingCategorie);
                             }
                         }
-
+                        $entityManager->persist($newAnime);
+                        $entityManager->flush();
+                        
                         $relationsArray[] = $newAnime;
 
                     } else {

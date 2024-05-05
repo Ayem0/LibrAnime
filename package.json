@@ -25,6 +25,7 @@
         "@popperjs/core": "^2.11.8",
         "autocomplete": "^0.0.1",
         "isotope": "^1.0.0-alpha.3",
-        "jquery": "^3.7.1"
+        "jquery": "^3.7.1",
+        "nouislider": "^15.7.1"
     }
 }

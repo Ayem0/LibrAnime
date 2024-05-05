@@ -49,6 +49,7 @@
 								</div>
 							{% endfor %}
 						</div>
+						
 						<div class="main-button"><button class="create-list-button mt-2" data-anime-id="{{ trendingAnime.id }}"><i class="fa fa-plus"></i> Create list</button></div>
 						<div id="create-list-form-{{ trendingAnime.id }}" style="display: none;" class="center"> 
 							{{ form_start(trendingForms[trendingAnime.id], {'attr': {'class': 'center'}}) }}
@@ -68,26 +69,32 @@
 							</div>
 							<div class="owl-features owl-carousel">
 							{% for trendingAnime in trendingAnimes %}
-							<div class="item">
-								<div class="thumb">
-								<a href="{{ path('app_anime_details', {'id': trendingAnime.id }) }}">
-								<img src="{{ trendingAnime.image }}" alt="" class='img-carousel'>
-								</a>
-								<div class="hover-effect">
-									<div class="main-button">
-									{% if app.user %}
-									<button class="add-to-list" data-anime-id="{{ trendingAnime.id }}"><i class="fa fa-plus"></i> Add To List</button>
-									{% else %}
-									<a href="{{ path('app_login') }}">Add To List</a>
-									{% endif %}
+								<div class="item">
+									<div class="thumb">
+									<a href="{{ path('app_anime_details', {'id': trendingAnime.id }) }}">
+										<img src="{{ trendingAnime.image }}" alt="" class='img-carousel'>
+									</a>
+									<div class="hover-effect">
+										<div class="main-button">
+										{% if app.user %}
+										<button class="add-to-list" data-anime-id="{{ trendingAnime.id }}"><i class="fa fa-plus"></i> Add To List</button>
+										{% else %}
+										<a href="{{ path('app_login') }}">Add To List</a>
+										{% endif %}
+										</div>
 									</div>
+									</div>
+									<h4><a href="{{ path('app_anime_details', {'id': trendingAnime.id }) }}">{{ trendingAnime.nom }}</a></h4>
 								</div>
-								</div>
-								<h4><a href="{{ path('app_anime_details', {'id': trendingAnime.id }) }}">{{ trendingAnime.nom }}</a></h4>
-							</div>
 							
 							{% endfor %}
+							
 							</div>
+							
+								<div class="main-button d-flex justify-content-center">
+									<a href="{{ path('app_browse', {'sort': 'a.trendingScore', 'direction': 'desc', 'page': 1}) }}" style="padding: 6px 15px;">View More</a>
+								</div>
+							
 						</div>
 					</div>
 					<div class="col-lg-4">
@@ -147,7 +154,7 @@
 							  	{% endfor %}
 							</ul>
 							<div class="text-button">
-							  <a href="#">View All Top Animes</a>
+								<a href="{{ path('app_browse', {'sort': 'a.averageScore', 'direction': 'desc', 'page': 1}) }}">View More</a>
 							</div>
 						  </div>
 						</div>
@@ -201,7 +208,7 @@
 				</div>
 				<div class="col-lg-12">
 					<div class="main-button">
-					  <a href="#">View More</a>
+						<a href="{{ path('app_browse', {'min': '2024', 'max': '2024', 'seasons': [season.id], 'sort': 'a.popularityScore', 'direction': 'desc', 'page': 1}) }}">View More</a>
 					</div>
 				</div>
 			</div>
@@ -276,7 +283,7 @@
                 	</div>
 					<div class="col-lg-12">
 						<div class="main-button">
-						  <a href="#">View More</a>
+							<a href="{{ path('app_browse', {'sort': 'a.popularityScore', 'direction': 'desc', 'page': 1}) }}">View More</a>
 						</div>
 					</div>
 				</div>

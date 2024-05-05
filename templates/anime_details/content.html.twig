@@ -53,21 +53,32 @@
                           </span>
                         </div>
                         <ul>
-                          <li><i class="fa fa-star"></i></li>
-                          <li><i class="fa fa-download"></i></li>
+                          <li><i class="fa fa-star"></i>{% if anime.averageScore is not null %} {{ anime.averageScore }}%{% else %} - {% endif %}</li>
+                          <li><i class="fa fa-heart"></i>{% if anime.popularityScore is not null %} {{ anime.popularityScore }}{% else %} - {% endif %}</li>
                         </ul>
                       </div>
                     </div>
                     <div class="col-lg-6">
                       <div class="right-info">
                         <ul>
-                          <li><i class="fa fa-star"></i> {% if anime.episodes is not null %} {{ anime.episodes }}{% else %} - {% endif %}</li>
-                          <li><i class="fa fa-download"></i> {% if anime.year is not null %} {{ anime.year }}{% else %} - {% endif %}</li>
-                          <li><i class="fa fa-server"></i> 36GB</li>
-                          <li><i class="fa fa-gamepad"></i> Action</li>
+                          <li><i style="color: #ec6090;">Format</i>{% if anime.format is not null %} {{ anime.format }}{% else %} - {% endif %}</li>
+                          <li><i>Episodes</i>{% if anime.episodes is not null %} {{ anime.episodes }}{% else %} - {% endif %}</li>
+                          <li><i>Duration</i>{% if anime.duration is not null %} {{ anime.duration }} minutes{% else %} - {% endif %}</li>
+                          <li><i>Status</i>{% if anime.status is not null %} {{ anime.status }}{% else %} - {% endif %}</li>
                         </ul>
                       </div>
                     </div>
+                    <div class="col-lg-6">
+                      <div class="right-info">
+                        <ul>
+                          <li><i style="color: #ec6090;">Start Date</i>{% if anime.startDate is not null %} {{ anime.startDate|date('d/m/Y') }}{% else %} - {% endif %}</li>
+                          <li><i>Season</i>{% if anime.season is not null %} {{ anime.season }}{% else %} - {% endif %}</li>
+                          <li><i>End Date</i>{% if anime.endDate is not null %} {{ anime.endDate|date('d/m/Y') }}{% else %} - {% endif %}</li>
+                          <li><i>Source</i>{% if anime.source is not null %} {{ anime.source }}{% else %} - {% endif %}</li>
+                        </ul>
+                      </div>
+                    </div>
+                 
                     
                     <div class="col-lg-12">
                       <p>{{ anime.synopsis }}</p>

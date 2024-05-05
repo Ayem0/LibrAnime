@@ -6,6 +6,9 @@ use App\Entity\Anime;
 use App\Entity\Categorie;
 use App\Entity\Liste;
 use App\Entity\User;
+use App\Entity\Season;
+use App\Entity\Format;
+use App\Entity\Status;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
@@ -52,5 +55,8 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToCrud('Liste', 'fas fa-list', Liste::class);
         yield MenuItem::linkToCrud('Categorie', 'fas fa-list', Categorie::class);
         yield MenuItem::linkToCrud('Anime', 'fas fa-list', Anime::class);
+        yield MenuItem::linkToCrud('Format', 'fas fa-list', Format::class);
+        yield MenuItem::linkToCrud('Season', 'fas fa-list', Season::class);
+        yield MenuItem::linkToCrud('Status', 'fas fa-list', Status::class);
     }
 }

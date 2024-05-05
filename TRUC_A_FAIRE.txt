@@ -1,70 +1,32 @@
-// A FAIRE
-- RECUPERER LES INFOS DES ANIMES :
-    - myAnimeListid        $anime['mal_id']  int
-    - demographics             $anime['demographics'][i]['name'] c un tableau puis une string
-    - categories          $anime['genres'][i]['name']  c un tableau puis une string
-    - images                    $anime['images']['jpg']['image_url']
-    - synopsis           $anime['synopsis'] string
-    - trailer               $anime['trailer']['url']  string
-    - trailerImg        $anime['trailer']['images']['image_url'] 
-    - episodes          $anime['episodes']    int
-    - year $anime['year'] int
-
-
-
 // IMPORTANT
 
-- AJOUTER DES CHAMPS DANS ANIMES :
-    - RELATIONS: RELATION MANYTOMANY AVEC ANIME
-    - RECOMMENDATIONS: RELATION MANYTOMANY AVEC ANIME
-    - FORMAT
-    - AIRING ETC
+- check la commande pgadmin pour dump la db
 
-- FILTRES DE RECHERCHES DANS LES CATEGORIES ET DANS LES LISTE :
-    - par categories
-    - par date de sortie
-    - par FORMAT
-    - par ...
-
-- MODIF HOME PAGE POUR : 
-    - AFFICHER 
-
-- AJOUTER LES CHAMPS MANQUANT DANS LE CRUD ADMIN
-
-- AJOUTER CHAMPS DANS LISTE :
-    - date de crea 
-    - private boolean ? apres
-
-
-
-
-
-
-
-
-
-
-
-- UPDATE LES INFOS DES ANIMES
-
-- AJOUTER LES RECOMMENDATIONS DES ANIMES DANS LA BDD DANS RESULT CONTROLLER
-
-- PAGE HOME:
-    - AJOUTER ANIMES DU MOMENT // TRENDING
-    - AJOUTER TOP ANIMES // TOP 100
-
-- AJOUTER LES CHAMPS DES ANIMES DANS ADMIN
-
-- FIX DESIGN    
-    - PARTOUT
-    - BOUTON DANS LES ON HOVER DES IMAGES
-    - CHOPER LES ON HOVER DES IMG DE LA TEMPLATE POUR LES BUTTON ADD TO LIST DANS CATEGORIE ET HOME PAGE
+- page browse :
+    - champs du formulaire de filtres :
+        - un champ de recherche pour rechercher par nom
+        - un autocompletefield de categories
+        - un autocomplete field de season
+        - un autocomplete field de format
+        - un autocomplete field de status
+        - un slider des années de 1940 a 2025
+        - un select qui sert de order by popularityScore, title, averageScore, { trendingScore pas sur }, startDate,
 
 - PAGE MY ACCOUNT
     - BOUTON DECO
-    - 
+    - jsp
 
-- FILTRES DES ANIMES DANS LES CATEGORIES / LES LISTES / LES RESULTS + PAGINATION DANS CATEGORIES
+// PLUS 
 
-// PLUS
+- entity liste :
+    - ajouter champs :
+        - date de crea 
+        - private boolean ? apres
 
+- filtres dans listes :
+    - meme filtres que page browse + pagination
+
+- filtres dans my list :
+    - order by title, date de crea, chercher par nom + pagination
+
+- Ajouter mot de passe oublié

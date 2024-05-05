@@ -39,6 +39,7 @@
                     <ul class="nav">
                       <li><a href="{{ path('app_home') }}" {% if app.request.attributes.get('_route') == 'app_home' %}class="active"{% endif %}>Home</a></li>
                       <li><a href="{{ path('app_categories') }}" {% if app.request.attributes.get('_route') == 'app_categories' %}class="active"{% endif %}>Categories</a></li>
+                      <li><a href="{{ path('app_browse') }}" {% if app.request.attributes.get('_route') == 'app_browse' %}class="active"{% endif %}>Browse</a></li>
                       <li><a href="{{ path('app_my_lists') }}" {% if app.request.attributes.get('_route') == 'app_my_lists' %}class="active"{% endif %}>My lists</a></li>
                       <li><a href="{{ path('app_my_account') }}" {% if app.request.attributes.get('_route') == 'app_my_account' %}class="active"{% endif %}>My Account <img src={{ asset('images/profile-header.jpg')}} alt=""></a></li>
                     </ul>
@@ -46,6 +47,7 @@
                     <ul class="nav">
                       <li><a href="{{ path('app_home') }}" {% if app.request.attributes.get('_route') == 'app_home' %}class="active"{% endif %}>Home</a></li>
                       <li><a href="{{ path('app_categories') }}" {% if app.request.attributes.get('_route') == 'app_categories' %}class="active"{% endif %}>Categories</a></li>
+                      <li><a href="{{ path('app_browse') }}" {% if app.request.attributes.get('_route') == 'app_browse' %}class="active"{% endif %}>Browse</a></li>
                       <li><a href="{{ path('app_login') }}" {% if app.request.attributes.get('_route') == 'app_login' %}class="active"{% endif %}>Log in</a></li>
                       <li><a href="{{ path('app_register') }}"{% if app.request.attributes.get('_route') == 'app_register' %}class="active"{% endif %}>Register</a></li>
                       <li style="display: none;"><a href=''></a> </li>

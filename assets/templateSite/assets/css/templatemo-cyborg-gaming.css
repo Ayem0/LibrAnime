@@ -1844,6 +1844,7 @@ body {
   }
   .header-area .main-nav .logo {
     margin-right: 30px;
+    max-width: 100px;
     border-right: none;
   }
   .gaming-library .item ul li {
