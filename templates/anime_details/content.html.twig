@@ -48,7 +48,7 @@
                           <h4>{{ anime.nom}}</h4>
                           <span>
                           {% for categorie in categories %}
-                            <a href="{{ path('app_categorie_details', {'id': categorie.id })}}">{{categorie.nom}}</a>
+                            <a href="{{ path('app_browse', {'categories': [categorie.id], 'page': 1}) }}">{{ categorie.nom }}</a>
                           {% endfor %}
                           </span>
                         </div>

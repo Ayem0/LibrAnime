@@ -57,7 +57,7 @@
 
 }
 
-http://std26.beaupeyrat.com::80 {
+http://std26.beaupeyrat.com:80 {
 	log {
 		# Redact the authorization query parameter that can be set by Mercure
 		format filter {
