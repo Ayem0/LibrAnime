@@ -2,9 +2,12 @@
 
 namespace App\Repository;
 
+use App\Data\ListData;
 use App\Entity\Liste;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Knp\Component\Pager\PaginatorInterface;
+use Knp\Component\Pager\Pagination\PaginationInterface;
 
 /**
  * @extends ServiceEntityRepository<Liste>
@@ -16,11 +19,32 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class ListeRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $registry, PaginatorInterface $paginator)
     {
         parent::__construct($registry, Liste::class);
+        $this->paginator = $paginator;
     }
 
+    public function findList(ListData $search, $id): PaginationInterface
+    {
+        $query = $this
+            ->createQueryBuilder('l')
+            ->andWhere('l.user_id = :id')
+            ->setParameter('id', $id);
+
+        if (!empty($search->q)) {
+            $query = $query
+                ->andWhere('LOWER(l.nom) LIKE LOWER(:q)')
+                ->setParameter('q', "%{$search->q}%");
+        }
+        
+        $query = $query->getQuery();
+        return $this->paginator->paginate(
+            $query,
+            $search->page,
+            40
+        );
+    }
     //    /**
     //     * @return Liste[] Returns an array of Liste objects
     //     */

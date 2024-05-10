@@ -10,8 +10,72 @@
                           </h4>
                       </div>
                       <div class="row">
-                          {% if animeInList %}
-                              {% for anime in animeInList %}
+                        <div class="col">
+                            {{ form_start(filterForm, {'attr': {'class': 'row g-3'}}) }}
+                                <div class="col-md-4">
+                                    {{ form_row(filterForm.q, {'attr': {'class': 'form-control', 'placeholder': 'Search an anime...'}}) }}
+                                </div>
+                                <div class="col-md-2">
+                                    {{ form_row(filterForm.categories, {'attr': {'class': 'form-select'}}) }}
+                                </div>
+                                <div class="col-md-2">
+                                    {{ form_row(filterForm.formats, {'attr': {'class': 'form-select'}}) }}
+                                </div>
+                                <div class="col-md-2">
+                                    {{ form_row(filterForm.seasons, {'attr': {'class': 'form-select'}}) }}
+                                </div>
+                                <div class="col-md-2">
+                                    {{ form_row(filterForm.status, {'attr': {'class': 'form-select'}}) }}
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-2 mt-3">
+                                        {{ form_row(filterForm.min, {'attr': {'class': 'form-control'}}) }}
+                                    </div>
+                                    <div class="col-md-2 mt-3">
+                                        {{ form_row(filterForm.max, {'attr': {'class': 'form-control'}}) }}
+                                    </div>
+                                    
+                                </div>
+                                <div class="col-md-4">
+                                    <div id="year-slider"></div>
+                                </div>
+                                
+                                
+                                <div class="col d-flex justify-content-end">
+                                    <button type="submit" class="btn btn-primary">Filter</button>
+                                </div>
+                            {{ form_end(filterForm) }}
+                        </div>
+                    </div>
+                    <div class="row mt-3 mb-3">
+                                
+                        <div class="col-md-2" style="color: white;">{% if animes.getTotalItemCount %}{{ animes.getTotalItemCount }} Results{% else %}No results{% endif %}</div>
+                        <div class="col-md-10 text-end">
+                            <button class="btn btn-secondary mb-3" >
+                                {{ knp_pagination_sortable(animes, 'Popularity', 'a.popularityScore') }}
+                            </button>
+                            <button class="btn btn-secondary mb-3">
+                                {{ knp_pagination_sortable(animes, 'Title', 'a.nom', {}, {'default_direction': 'desc'}) }}
+                            </button>
+                            <button class="btn btn-secondary mb-3">
+                                {{ knp_pagination_sortable(animes, 'Average Score', 'a.averageScore') }}
+                            </button>
+                            <button class="btn btn-secondary mb-3">
+                                {{ knp_pagination_sortable(animes, 'Trending', 'a.trendingScore') }}
+                            </button>
+                            <button class="btn btn-secondary mb-3">
+                                {{ knp_pagination_sortable(animes, 'Release Date', 'a.startDate') }}
+                            </button>
+                           
+                        </div>
+                    </div>
+                      <div class="row">
+                        <div class="row mt-3 mb-3">
+                                
+                            
+                          {% if animes %}
+                          
+                              {% for anime in animes %}
                                   <div class="col-lg-3 col-sm-6">
                                       <div class="item">
                                           <div class="thumb">

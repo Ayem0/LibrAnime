@@ -2,9 +2,12 @@
 
 namespace App\Controller;
 
+use App\Data\AnimeListData;
 use App\Entity\Anime;
 use App\Entity\Liste;
 use App\Form\SearchFormType;
+use App\Form\FilterAnimeListType;
+use App\Repository\AnimeRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,21 +18,19 @@ use Symfony\Component\HttpFoundation\Request;
 class ListDetailsController extends AbstractController
 {
     #[Route('/list/{id}', name: 'app_list')]
-    public function index(ManagerRegistry $doctrine, int $id, Request $request): Response
+    public function index(AnimeRepository $repository,EntityManagerInterface $doctrine, int $id, Request $request): Response
     {
+        $data = new AnimeListData();
+        $data->page = $request->get('page', 1);
+        $filterForm = $this->createForm(FilterAnimeListType::class, $data);
+        $filterForm->handleRequest($request);
+        $animes = $repository->findAnimesInList($data,$id);
         $list = $doctrine->getRepository(Liste::class)->findOneBy(['id' => $id]);
-        $animeInList = $list->getAnime()->toArray();
-        usort($animeInList, function($a, $b) {
-            $nomA = strtolower($a->getNom());
-            $nomB = strtolower($b->getNom());
-            return strcmp($nomA, $nomB);
-        });
-        $listAnime = [];
-        foreach ($animeInList as $element) {
-            $listAnime[] = $element;
-        };
+
+        // Searchbar
         $form = $this->createForm(SearchFormType::class);
         $form->handleRequest($request);
+
         if ($form->isSubmitted() && $form->isValid()) {
             $data = strval($form->get('search')->getData());
             if ($form->isSubmitted() && $form->isValid()) {
@@ -39,8 +40,9 @@ class ListDetailsController extends AbstractController
         }
         return $this->render('list_details/index.html.twig', [
             'liste' => $list,
-            'animeInList' => $listAnime,
+            'animes' => $animes,
             'searchForm'=> $form,
+            'filterForm' => $filterForm
         ]);
     }
 

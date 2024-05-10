@@ -2,9 +2,12 @@
 
 namespace App\Controller;
 
+use App\Data\ListData;
+use App\Form\FilterFormListType;
 use App\Form\CreateListFormType;
 use App\Form\SearchFormType;
 use App\Entity\Liste;
+use App\Repository\ListeRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,7 +17,7 @@ use Doctrine\ORM\EntityManagerInterface;
 class MyListsController extends AbstractController
 {
     #[Route('/my-lists', name: 'app_my_lists')]
-    public function index(Request $request, EntityManagerInterface $entityManager): Response
+    public function index(Request $request, ListeRepository $repository, EntityManagerInterface $entityManager): Response
     {
         $user = $this->getUser();
         $list = new Liste();
@@ -27,23 +30,19 @@ class MyListsController extends AbstractController
             // do anything else you need here, like send an email
         }
         
-        $listsArray = [];
 
-        if ($user) {
-            $lists = $user->getListes()->getValues(); 
-            usort($lists, function($a, $b) {
-                $nomA = strtolower($a->getNom());
-                $nomB = strtolower($b->getNom());
-                return strcmp($nomA, $nomB);
-            });
-            $listsArray = $lists;
-        }
+        $data = new ListData();
+        $data->page = $request->get('page', 1);
+        $filterForm = $this->createForm(FilterFormListType::class, $data);
+        $filterForm->handleRequest($request);
+        $lists = $repository->findList($data, $user->getId());
+        
         $listsCount = [];
-        foreach ($listsArray as $element) {
+        foreach ($lists as $element) {
             $animeInList = $element->getAnime();
             $listsCount[$element->getId()] = count($animeInList);
         }
-
+        
         $searchForm = $this->createForm(SearchFormType::class);
         $searchForm->handleRequest($request);
         if ($searchForm->isSubmitted() && $searchForm->isValid()) {
@@ -54,10 +53,11 @@ class MyListsController extends AbstractController
             }
         }
         return $this->render('my_lists/index.html.twig', [
-            'lists'=> $listsArray,
+            'lists'=> $lists,
             'form'=>$form,
             'searchForm' => $searchForm,
-            'listsCount' => $listsCount
+            'listsCount' => $listsCount,
+            'filterForm' => $filterForm
         ]);
     }
     

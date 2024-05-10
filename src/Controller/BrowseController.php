@@ -53,6 +53,7 @@ class BrowseController extends AbstractController
         $filterForm = $this->createForm(FilterFormType::class, $data);
         $filterForm->handleRequest($request);
         $animes = $repository->findSearch($data);
+        
         $listForms = [];
         foreach ($animes as $anime) {
             $list = new Liste();
