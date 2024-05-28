@@ -20,6 +20,10 @@ class ListDetailsController extends AbstractController
     #[Route('/list/{id}', name: 'app_list')]
     public function index(AnimeRepository $repository,EntityManagerInterface $doctrine, int $id, Request $request): Response
     {
+        $userId = $this->getUser();
+
+
+
         $data = new AnimeListData();
         $data->page = $request->get('page', 1);
         $filterForm = $this->createForm(FilterAnimeListType::class, $data);
@@ -38,22 +42,60 @@ class ListDetailsController extends AbstractController
                 return  $this->redirectToRoute('app_result_query', ['query' => $data, 'page' => 1]);
             }
         }
+
+        if ( !$list) {
+            return $this->render('list_details/error.html.twig', [
+                'searchForm'=> $form,
+            ]);
+        }
+
+        if ( $list->getUserId() !== $userId) {
+            return $this->render('list_details/error.html.twig', [
+                'searchForm'=> $form,
+            ]);
+        } 
+
         return $this->render('list_details/index.html.twig', [
             'liste' => $list,
             'animes' => $animes,
             'searchForm'=> $form,
             'filterForm' => $filterForm
         ]);
+        
     }
 
     #[Route('/list/{liste<\d+>}/remove-anime/{anime<\d+>}', name: 'app_remove_anime_in_list')]
     public function removeAnimeInList(Liste $liste, Anime $anime, EntityManagerInterface $entityManager): Response
     {
-        $user = $this->getUser();
-        if ( $user ) {
+        $userId = $this->getUser();
+        $listUserId = $liste->getUserId();
+
+        if ( $userId == $listUserId) {
+
             $liste->removeAnime($anime);
             $entityManager->flush();
+
+            return $this->redirectToRoute('app_list', ['id' => $liste->getId()]);
+        } else {
+            return $this->redirectToRoute('app_home');
         }
-        return $this->redirectToRoute('app_list', ['id' => $liste->getId()]);
+    }
+
+    #[Route('/list/{liste<\d+>}/add-anime/{anime<\d+>}', name: 'app_add_anime_in_list')]
+    public function addAnimeInList(Liste $liste, Anime $anime, Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $userId = $this->getUser();
+        $listUserId = $liste->getUserId();
+
+        if ( $userId == $listUserId) {
+
+            $liste->addAnime($anime);
+            $entityManager->persist($liste);
+            $entityManager->flush();
+
+            return $this->redirect($request->headers->get('referer'));
+        } else {
+            return $this->redirectToRoute('app_home');
+        }
     }
 }

@@ -37,6 +37,7 @@ security:
         - { path: ^/admin, roles: ROLE_ADMIN }
         - { path: ^/my-lists, roles: ROLE_USER }
         - { path: ^/list, roles: ROLE_USER }
+        - { path: /my-account, roles: ROLE_USER }
 
 when@test:
     security:

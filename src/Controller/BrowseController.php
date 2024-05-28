@@ -67,7 +67,7 @@ class BrowseController extends AbstractController
                 $entityManager->persist($list);
                 $entityManager->flush();
                 
-                return  $this->redirectToRoute('app_browse');
+                return $this->redirect($request->headers->get('referer'));
             }
         }
         return $this->render('browse/index.html.twig', [

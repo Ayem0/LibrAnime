@@ -27,7 +27,6 @@ class MyListsController extends AbstractController
             $list->setUserId($user);
             $entityManager->persist($list);
             $entityManager->flush();
-            // do anything else you need here, like send an email
         }
         
 
@@ -65,7 +64,8 @@ class MyListsController extends AbstractController
     public function removeList(EntityManagerInterface $entityManager, Liste $list): Response
     {
         $user = $this->getUser();
-        if ($list->getUserId() === $user) {
+
+        if ($list->getUserId() == $user) {
             $user->removeListe($list); 
             $entityManager->flush();
         }

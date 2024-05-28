@@ -12,6 +12,9 @@ class MyAccountController extends AbstractController
     #[Route('/my-account', name: 'app_my_account')]
     public function index(Request $request): Response
     {
+        $user = $this->getUser();
+        $listCount = count($user->getListes());
+
         $form = $this->createForm(SearchFormType::class);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -23,6 +26,7 @@ class MyAccountController extends AbstractController
         }
         return $this->render('my_account/index.html.twig', [
             'searchForm' => $form,
+            'listCount' => $listCount,
         ]);
     }
 }

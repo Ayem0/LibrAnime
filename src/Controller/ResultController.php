@@ -305,13 +305,4 @@ class ResultController extends AbstractController
             'lists'=> $listsArray
         ]);
     }
-    #[Route('/list/{liste<\d+>}/add-anime/{anime<\d+>}', name: 'app_add_anime_in_list')]
-    public function addAnimeInList(Liste $liste, Anime $anime, Request $request, EntityManagerInterface $entityManager): Response
-    {
-        $liste->addAnime($anime);
-        $entityManager->persist($liste);
-        $entityManager->flush();
-       
-        return $this->redirect($request->headers->get('referer'));
-    }
 }

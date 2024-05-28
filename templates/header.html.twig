@@ -41,7 +41,7 @@
                       <li><a href="{{ path('app_categories') }}" {% if app.request.attributes.get('_route') == 'app_categories' %}class="active"{% endif %}>Categories</a></li>
                       <li><a href="{{ path('app_browse') }}" {% if app.request.attributes.get('_route') == 'app_browse' %}class="active"{% endif %}>Browse</a></li>
                       <li><a href="{{ path('app_my_lists') }}" {% if app.request.attributes.get('_route') == 'app_my_lists' %}class="active"{% endif %}>My lists</a></li>
-                      <li><a href="{{ path('app_my_account') }}" {% if app.request.attributes.get('_route') == 'app_my_account' %}class="active"{% endif %}>My Account <img src={{ asset('images/profile-header.jpg')}} alt=""></a></li>
+                      <li><a href="{{ path('app_my_account') }}" {% if app.request.attributes.get('_route') == 'app_my_account' %}class="active"{% endif %}>My Account <img src="{{ asset("images/pngProfile.png") }}" alt=""></a></li>
                     </ul>
                     {% else %}
                     <ul class="nav">
